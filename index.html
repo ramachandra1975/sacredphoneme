@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sanskrit Dimension — Phase 2 | CulturalMusings Sacred Research Portal</title>
+<meta name="description" content="Sanskrit Dimension: 50 Aksharas phoneme map, 200 Dhātu verbal roots cross-linked to Lalitā/Rudram/Swaras, and live Pāṇinian inference engine — culturalmusings.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Noto+Sans+Devanagari:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════════════
+   PHASE 2 — Sanskrit Dimension Design System
+   Palette: deep violet-navy + gold + violet + turquoise
+═══════════════════════════════════════════════════ */
+:root {
+  --navy2:#07111e; --navy:#0f2240;
+  --gold:#c5a059; --gold2:#e2c98a; --gold3:#f5d98a;
+  --violet:#7B2D8B; --violet2:#B468D4; --violet3:#d4a8ff;
+  --turquoise:#1ABCB0; --turq2:#4dd4ca;
+  --rose:#C4446A; --rose2:#E87AA0;
+  --cream:#fdfaf5; --cream2:#f0dfc8; --cream3:#9a8070;
+  --surface:#08000f; --surface2:#100018; --surface3:#180020;
+  --border:rgba(180,104,212,0.25); --border2:rgba(180,104,212,0.12); --border3:rgba(180,104,212,0.07);
+  --gold-border:rgba(197,160,89,0.2); --gold-border2:rgba(197,160,89,0.1);
+  --green-ok:#2DD4A0; --red-err:#F87171;
+  --muted:#503844;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  background:var(--surface);color:var(--cream);
+  overflow-x:hidden;font-size:17px;line-height:1.8;
+  min-height:100vh;
+}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-thumb{background:rgba(180,104,212,0.3);border-radius:2px;}
+::-webkit-scrollbar-track{background:transparent;}
+
+/* ── AMBIENT BACKGROUND ── */
+body::before {
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 20%, rgba(123,45,139,0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 50% at 80% 80%, rgba(26,188,176,0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 60% 40%, rgba(197,160,89,0.04) 0%, transparent 70%);
+}
+body::after {
+  content:'ॐ';position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-size:50vw;color:rgba(180,104,212,0.022);pointer-events:none;z-index:0;
+  line-height:1;font-family:serif;user-select:none;
+}
+
+/* ── TOP HEADER ── */
+.skt-header {
+  position:sticky;top:0;z-index:100;
+  background:rgba(8,0,15,0.96);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:0;height:52px;padding:0 18px;
+}
+.skt-brand {
+  display:flex;align-items:center;gap:10px;
+  padding-right:16px;border-right:1px solid var(--border2);margin-right:14px;
+}
+.skt-brand-om {font-size:1.4rem;color:var(--violet2);text-shadow:0 0 20px rgba(180,104,212,0.6);}
+.skt-brand-text .b1{display:block;font-family:'Cinzel Decorative',serif;font-size:0.46rem;color:var(--gold2);letter-spacing:2px;}
+.skt-brand-text .b2{display:block;font-family:'Cinzel',serif;font-size:0.38rem;color:var(--cream3);letter-spacing:1px;}
+.skt-nav-tabs{display:flex;gap:0;flex:1;overflow-x:auto;scrollbar-width:none;}
+.skt-nav-tabs::-webkit-scrollbar{display:none;}
+.skt-tab{
+  font-family:'Cinzel',serif;font-size:0.5rem;letter-spacing:1px;text-transform:uppercase;
+  background:none;border:none;border-bottom:2px solid transparent;
+  color:var(--cream3);cursor:pointer;padding:0 16px;height:52px;
+  transition:all 0.2s;white-space:nowrap;
+}
+.skt-tab:hover{color:var(--cream);}
+.skt-tab.active{color:var(--violet3);border-bottom-color:var(--violet2);}
+.skt-header-right{margin-left:auto;display:flex;gap:8px;align-items:center;}
+.skt-key-inp-wrap{display:flex;align-items:center;gap:6px;
+  background:rgba(0,0,0,0.4);border:1px solid var(--border2);border-radius:3px;padding:3px 8px;}
+.skt-key-inp{
+  background:none;border:none;outline:none;
+  font-family:'JetBrains Mono',monospace;font-size:0.46rem;color:var(--green-ok);
+  width:160px;
+}
+.skt-key-inp::placeholder{color:#333;}
+.skt-mode-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:background 0.3s;}
+.skt-mode-dot.ok{background:var(--green-ok);box-shadow:0 0 8px rgba(45,212,160,0.5);}
+
+/* ── MAIN LAYOUT ── */
+.skt-layout{display:flex;min-height:calc(100vh - 52px);position:relative;z-index:1;}
+.skt-sidebar{
+  width:230px;flex-shrink:0;border-right:1px solid var(--border2);
+  background:rgba(0,0,0,0.35);
+  position:sticky;top:52px;height:calc(100vh - 52px);overflow-y:auto;
+}
+.skt-main{flex:1;overflow:hidden;}
+
+/* Sidebar items */
+.sb-section{padding:10px 0 4px;border-bottom:1px solid var(--border2);}
+.sb-section-title{
+  font-family:'Cinzel Decorative',serif;font-size:0.36rem;
+  letter-spacing:2px;color:var(--violet2);padding:0 12px 5px;text-transform:uppercase;
+}
+.sb-item{
+  display:flex;align-items:center;gap:8px;
+  padding:5px 12px;cursor:pointer;transition:background 0.15s;
+  border-left:2px solid transparent;
+}
+.sb-item:hover{background:rgba(180,104,212,0.07);}
+.sb-item.active{background:rgba(180,104,212,0.12);border-left-color:var(--violet2);}
+.sb-dot{width:5px;height:5px;border-radius:50%;background:var(--muted);flex-shrink:0;}
+.sb-dot.lit{background:var(--violet2);box-shadow:0 0 5px rgba(180,104,212,0.5);}
+.sb-label{font-size:0.72rem;color:var(--cream2);flex:1;line-height:1.3;}
+.sb-item.active .sb-label{color:var(--violet3);}
+.sb-sub{font-family:'JetBrains Mono',monospace;font-size:0.36rem;color:var(--muted);}
+
+/* ── CONTENT PANES ── */
+.skt-pane{display:none;position:relative;}
+.skt-pane.active{display:block;}
+.pane-content{padding:24px 32px 48px;max-width:1200px;}
+
+.pane-eyebrow{
+  font-family:'Cinzel',serif;font-size:0.46rem;letter-spacing:3px;
+  color:var(--violet2);text-transform:uppercase;margin-bottom:6px;
+}
+.pane-title{
+  font-family:'Cinzel Decorative',serif;font-size:1.4rem;
+  color:var(--cream);line-height:1.15;margin-bottom:6px;
+}
+.pane-sub{font-style:italic;color:var(--cream3);font-size:0.9rem;margin-bottom:24px;line-height:1.7;}
+.section-divider{
+  height:1px;background:linear-gradient(90deg,var(--violet),transparent);
+  margin:24px 0;
+}
+
+/* ════════════════════════════════════════
+   TOOL 1 — 50 AKSHARAS PHONEME MAP
+════════════════════════════════════════ */
+.akshara-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+.ak-filter-btn{
+  font-family:'Cinzel',serif;font-size:0.44rem;letter-spacing:0.8px;
+  background:none;border:1px solid var(--border2);color:var(--cream3);
+  cursor:pointer;padding:4px 12px;border-radius:2px;transition:all 0.2s;
+}
+.ak-filter-btn:hover{border-color:var(--violet);color:var(--violet3);}
+.ak-filter-btn.active{background:rgba(180,104,212,0.15);border-color:var(--violet2);color:var(--violet3);}
+
+.akshara-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
+  gap:6px;margin-bottom:20px;
+}
+.ak-card{
+  background:rgba(180,104,212,0.04);border:1px solid var(--border2);border-radius:5px;
+  padding:12px 10px;text-align:center;cursor:pointer;transition:all 0.25s;position:relative;overflow:hidden;
+}
+.ak-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--violet),transparent);
+  opacity:0;transition:opacity 0.25s;
+}
+.ak-card:hover{background:rgba(180,104,212,0.1);border-color:var(--violet2);transform:translateY(-2px);}
+.ak-card:hover::before{opacity:1;}
+.ak-card.selected{background:rgba(180,104,212,0.2);border-color:var(--violet2);box-shadow:0 0 20px rgba(180,104,212,0.15);}
+.ak-card.hidden{display:none;}
+.ak-deva{font-family:'Noto Sans Devanagari',sans-serif;font-size:1.8rem;display:block;margin-bottom:4px;line-height:1.1;}
+.ak-iast{font-family:'Cinzel',serif;font-size:0.54rem;color:var(--gold);display:block;margin-bottom:3px;}
+.ak-sthana{font-family:'JetBrains Mono',monospace;font-size:0.34rem;color:var(--cream3);}
+.ak-deity{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.58rem;color:var(--rose2);}
+
+/* Akshara detail panel */
+.ak-detail{
+  background:rgba(0,0,0,0.4);border:1px solid var(--border);border-radius:6px;
+  padding:20px 24px;margin-top:16px;display:none;
+  animation:fadeIn 0.3s ease;
+}
+.ak-detail.show{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.ak-detail-header{display:flex;align-items:center;gap:20px;margin-bottom:16px;flex-wrap:wrap;}
+.ak-detail-deva{font-family:'Noto Sans Devanagari',sans-serif;font-size:4rem;color:var(--violet2);line-height:1;}
+.ak-detail-meta{flex:1;}
+.ak-detail-iast{font-family:'Cinzel Decorative',serif;font-size:1.1rem;color:var(--gold2);margin-bottom:3px;}
+.ak-detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;}
+.ak-detail-card{background:rgba(255,255,255,0.025);border:1px solid var(--border2);border-radius:4px;padding:10px 12px;}
+.ak-detail-card-label{font-family:'Cinzel',serif;font-size:0.38rem;letter-spacing:1.5px;color:var(--violet2);text-transform:uppercase;margin-bottom:4px;}
+.ak-detail-card-val{font-size:0.82rem;color:var(--cream2);line-height:1.5;}
+.ak-crosslinks{margin-top:12px;}
+.ak-crosslinks-title{font-family:'Cinzel',serif;font-size:0.44rem;letter-spacing:1.5px;color:var(--turquoise);margin-bottom:6px;}
+.ak-crosslink-items{display:flex;gap:5px;flex-wrap:wrap;}
+.xlink{
+  font-family:'JetBrains Mono',monospace;font-size:0.42rem;
+  color:var(--turquoise);border:1px solid rgba(26,188,176,0.25);
+  padding:2px 8px;border-radius:2px;cursor:pointer;transition:all 0.2s;
+}
+.xlink:hover{background:rgba(26,188,176,0.1);border-color:var(--turquoise);}
+
+/* Swara color bars */
+.swara-bar{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:'Cinzel',serif;font-size:0.44rem;
+  padding:2px 8px;border-radius:2px;border:1px solid;
+}
+
+/* ════════════════════════════════════════
+   TOOL 2 — DHĀTU EXPLORER
+════════════════════════════════════════ */
+.dhatu-search-bar{
+  display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;
+}
+.dhatu-inp{
+  flex:1;min-width:200px;
+  background:rgba(0,0,0,0.5);border:1px solid var(--border);border-radius:3px;
+  color:var(--cream);font-family:'Cinzel',serif;font-size:0.9rem;
+  padding:7px 12px;outline:none;transition:border-color 0.2s;
+}
+.dhatu-inp:focus{border-color:var(--violet2);}
+.dhatu-inp::placeholder{color:var(--muted);}
+.dhatu-filter-wrap{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;}
+.dhatu-cat-btn{
+  font-family:'Cinzel',serif;font-size:0.42rem;letter-spacing:0.8px;
+  background:none;border:1px solid var(--gold-border);color:var(--gold);
+  cursor:pointer;padding:3px 10px;border-radius:2px;transition:all 0.2s;
+}
+.dhatu-cat-btn:hover{background:rgba(197,160,89,0.08);}
+.dhatu-cat-btn.active{background:rgba(197,160,89,0.14);border-color:var(--gold2);color:var(--gold2);}
+
+.dhatu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px;}
+.dhatu-card{
+  background:rgba(197,160,89,0.03);border:1px solid var(--gold-border);
+  border-radius:5px;padding:14px 16px;cursor:pointer;transition:all 0.25s;
+  position:relative;overflow:hidden;
+}
+.dhatu-card::after{
+  content:'';position:absolute;top:0;left:0;bottom:0;width:2px;
+  background:var(--gold);opacity:0;transition:opacity 0.2s;
+}
+.dhatu-card:hover{background:rgba(197,160,89,0.07);border-color:rgba(197,160,89,0.35);}
+.dhatu-card:hover::after{opacity:1;}
+.dhatu-card.hidden{display:none;}
+.dhatu-root{font-family:'Cinzel Decorative',serif;font-size:0.82rem;color:var(--gold2);margin-bottom:2px;}
+.dhatu-deva{font-family:'Noto Sans Devanagari',sans-serif;font-size:1.1rem;color:var(--gold3);margin-bottom:4px;line-height:1.2;}
+.dhatu-meaning{font-size:0.78rem;color:var(--cream3);margin-bottom:6px;font-style:italic;line-height:1.5;}
+.dhatu-gaṇa{font-family:'JetBrains Mono',monospace;font-size:0.38rem;color:var(--muted);}
+.dhatu-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px;}
+.dhatu-tag{
+  font-family:'JetBrains Mono',monospace;font-size:0.36rem;
+  padding:2px 6px;border-radius:2px;
+}
+.dhatu-tag.lalita{background:rgba(196,68,106,0.12);border:1px solid rgba(196,68,106,0.25);color:#E87AA0;}
+.dhatu-tag.rudram{background:rgba(208,104,32,0.12);border:1px solid rgba(208,104,32,0.25);color:#E8A060;}
+.dhatu-tag.swara{background:rgba(45,106,79,0.18);border:1px solid rgba(45,106,79,0.35);color:#74c69d;}
+
+/* Dhātu detail panel */
+.dhatu-detail{
+  background:rgba(0,0,0,0.4);border:1px solid var(--gold-border);border-radius:6px;
+  padding:20px 24px;margin-top:14px;display:none;animation:fadeIn 0.3s ease;
+}
+.dhatu-detail.show{display:block;}
+.dhatu-detail-header{display:flex;align-items:flex-start;gap:20px;margin-bottom:16px;flex-wrap:wrap;}
+.dhatu-detail-big{font-family:'Cinzel Decorative',serif;font-size:1.6rem;color:var(--gold2);}
+.dhatu-detail-deva-big{font-family:'Noto Sans Devanagari',sans-serif;font-size:2.4rem;color:var(--gold3);line-height:1;}
+.dhatu-derivation{background:rgba(197,160,89,0.04);border-left:2px solid var(--gold);padding:10px 14px;margin:10px 0;border-radius:0 3px 3px 0;}
+.dhatu-derivation p{font-size:0.82rem;line-height:1.75;color:var(--cream2);}
+.dhatu-occurrences{margin-top:14px;}
+.occ-section-title{font-family:'Cinzel',serif;font-size:0.5rem;letter-spacing:1.5px;color:var(--violet2);margin-bottom:8px;}
+.occ-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:6px;}
+.occ-card{
+  background:rgba(255,255,255,0.025);border:1px solid var(--border2);
+  border-radius:4px;padding:8px 12px;
+}
+.occ-portal{font-family:'Cinzel',serif;font-size:0.4rem;letter-spacing:1px;margin-bottom:4px;}
+.occ-portal.l{color:#E87AA0;}
+.occ-portal.r{color:#E8A060;}
+.occ-portal.s{color:#74c69d;}
+.occ-names{font-size:0.78rem;color:var(--cream3);line-height:1.55;}
+
+/* AI generation for dhātu */
+.dhatu-ai-btn{
+  font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.8px;
+  background:none;border:1px solid rgba(197,160,89,0.4);border-radius:3px;
+  color:var(--gold);cursor:pointer;padding:5px 14px;transition:all 0.2s;margin-top:10px;
+}
+.dhatu-ai-btn:hover{background:rgba(197,160,89,0.1);border-color:var(--gold2);}
+.dhatu-ai-btn:disabled{opacity:0.4;cursor:not-allowed;}
+.dhatu-ai-out{margin-top:10px;font-size:0.88rem;line-height:1.82;color:var(--cream2);}
+.dhatu-ai-out p{margin-bottom:9px;}
+.dhatu-ai-out strong{color:var(--cream);}
+.dhatu-ai-out em{color:var(--gold3);}
+
+/* ════════════════════════════════════════
+   TOOL 3 — LIVE INFERENCE ENGINE
+════════════════════════════════════════ */
+.inf-hero{
+  background:linear-gradient(135deg,rgba(123,45,139,0.1),rgba(26,188,176,0.05));
+  border:1px solid var(--border);border-radius:8px;
+  padding:28px 28px 24px;margin-bottom:20px;
+  position:relative;overflow:hidden;
+}
+.inf-hero::before{
+  content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;
+  border-radius:50%;background:radial-gradient(circle,rgba(180,104,212,0.08),transparent 70%);
+  pointer-events:none;
+}
+.inf-title{font-family:'Cinzel Decorative',serif;font-size:0.9rem;color:var(--violet3);margin-bottom:6px;}
+.inf-sub{font-size:0.84rem;color:var(--cream3);font-style:italic;margin-bottom:18px;line-height:1.65;}
+.inf-input-row{display:flex;gap:8px;align-items:stretch;flex-wrap:wrap;}
+.inf-word-inp{
+  flex:1;min-width:220px;
+  background:rgba(0,0,0,0.55);border:1px solid var(--border);border-radius:4px;
+  color:var(--cream);font-family:'Cinzel',serif;font-size:1.1rem;letter-spacing:1px;
+  padding:10px 16px;outline:none;transition:border-color 0.3s;
+}
+.inf-word-inp:focus{border-color:var(--violet2);box-shadow:0 0 0 2px rgba(180,104,212,0.1);}
+.inf-word-inp::placeholder{color:#2a2a2a;font-size:0.9rem;}
+.inf-btn{
+  font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:1.5px;text-transform:uppercase;
+  background:rgba(180,104,212,0.15);border:1px solid rgba(180,104,212,0.5);
+  color:var(--violet3);cursor:pointer;padding:10px 20px;border-radius:4px;transition:all 0.25s;
+}
+.inf-btn:hover{background:rgba(180,104,212,0.28);border-color:var(--violet2);}
+.inf-btn:disabled{opacity:0.35;cursor:not-allowed;}
+.inf-examples{margin-top:10px;display:flex;gap:5px;flex-wrap:wrap;align-items:center;}
+.inf-ex-label{font-family:'JetBrains Mono',monospace;font-size:0.4rem;color:var(--muted);}
+.inf-ex{
+  font-family:'Cinzel',serif;font-size:0.48rem;color:var(--gold);
+  background:rgba(197,160,89,0.06);border:1px solid rgba(197,160,89,0.2);
+  padding:2px 10px;border-radius:2px;cursor:pointer;transition:all 0.2s;
+}
+.inf-ex:hover{background:rgba(197,160,89,0.14);}
+
+/* Results */
+.inf-results{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;margin-top:20px;}
+.inf-card{
+  background:rgba(0,0,0,0.4);border-radius:6px;padding:16px 18px;
+  border:1px solid var(--border2);position:relative;overflow:hidden;
+}
+.inf-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.inf-card.dhatu::before{background:linear-gradient(90deg,var(--gold),var(--gold3),transparent);}
+.inf-card.chakra::before{background:linear-gradient(90deg,var(--violet),var(--violet2),transparent);}
+.inf-card.crosslinks::before{background:linear-gradient(90deg,var(--turquoise),var(--turq2),transparent);}
+.inf-card.rasa::before{background:linear-gradient(90deg,var(--rose),var(--rose2),transparent);}
+.inf-card.neuro::before{background:linear-gradient(90deg,#2DD4A0,#4aeac0,transparent);}
+.inf-card-title{font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;}
+.inf-card.dhatu .inf-card-title{color:var(--gold2);}
+.inf-card.chakra .inf-card-title{color:var(--violet2);}
+.inf-card.crosslinks .inf-card-title{color:var(--turquoise);}
+.inf-card.rasa .inf-card-title{color:var(--rose2);}
+.inf-card.neuro .inf-card-title{color:var(--green-ok);}
+.inf-card-body{font-size:0.84rem;line-height:1.8;color:var(--cream2);}
+.inf-card-body strong{color:var(--cream);}
+.inf-card-body em{color:var(--gold3);}
+.inf-card-body .xlink{display:inline-flex;margin:2px;}
+.inf-loading{
+  text-align:center;padding:32px;color:var(--cream3);font-style:italic;
+  font-size:0.88rem;animation:pulse-fade 1.5s ease-in-out infinite;
+}
+@keyframes pulse-fade{0%,100%{opacity:0.5;}50%{opacity:1;}}
+.inf-no-key{
+  background:rgba(197,160,89,0.04);border:1px solid var(--gold-border);border-radius:4px;
+  padding:14px 18px;margin-top:14px;font-size:0.84rem;color:var(--cream3);
+  display:flex;align-items:flex-start;gap:12px;
+}
+.inf-no-key-icon{font-size:1.5rem;flex-shrink:0;}
+.inf-no-key a{color:var(--gold);text-decoration:underline;cursor:pointer;}
+
+/* Key entry UI (inline) */
+.key-status-bar{
+  display:flex;align-items:center;gap:8px;margin-bottom:14px;
+  padding:8px 14px;background:rgba(0,0,0,0.35);border:1px solid var(--border2);border-radius:4px;
+}
+.key-status-txt{font-family:'JetBrains Mono',monospace;font-size:0.44rem;color:var(--cream3);flex:1;}
+.key-status-badge{
+  font-family:'JetBrains Mono',monospace;font-size:0.4rem;
+  padding:2px 8px;border-radius:2px;
+}
+.key-status-badge.ok{background:rgba(45,212,160,0.1);border:1px solid rgba(45,212,160,0.3);color:var(--green-ok);}
+.key-status-badge.none{background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.25);color:var(--red-err);}
+.key-inp-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.key-inp{
+  flex:1;min-width:200px;
+  background:rgba(0,0,0,0.45);border:1px solid var(--border);border-radius:3px;
+  color:var(--green-ok);font-family:'JetBrains Mono',monospace;font-size:0.52rem;
+  padding:5px 10px;outline:none;transition:border-color 0.2s;
+}
+.key-inp:focus{border-color:var(--violet2);}
+.key-inp::placeholder{color:#1a1a1a;}
+.key-lock-btn{
+  font-family:'Cinzel',serif;font-size:0.44rem;letter-spacing:0.8px;
+  background:rgba(45,212,160,0.08);border:1px solid rgba(45,212,160,0.3);
+  color:var(--green-ok);cursor:pointer;padding:4px 12px;border-radius:2px;transition:all 0.2s;
+}
+.key-lock-btn:hover{background:rgba(45,212,160,0.15);}
+
+/* Paninian parse table */
+.panini-table{width:100%;border-collapse:collapse;margin:10px 0;font-size:0.8rem;}
+.panini-table th{font-family:'Cinzel',serif;font-size:0.42rem;letter-spacing:1px;color:var(--gold);padding:6px 10px;border-bottom:1px solid var(--gold-border);text-align:left;}
+.panini-table td{padding:5px 10px;border-bottom:1px solid var(--border3);color:var(--cream2);vertical-align:top;}
+.panini-table td:first-child{font-family:'JetBrains Mono',monospace;color:var(--violet3);white-space:nowrap;}
+
+/* Loading spinner */
+.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--violet2);border-radius:50%;animation:spin 1s linear infinite;margin-right:6px;vertical-align:middle;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* Log strip */
+.log-strip{
+  position:fixed;bottom:0;left:0;right:0;z-index:50;
+  background:rgba(0,0,0,0.92);border-top:1px solid var(--border2);
+  display:flex;align-items:center;gap:8px;height:22px;padding:0 14px;
+}
+.log-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.log-dot.ok{background:var(--green-ok);}
+.log-dot.err{background:var(--red-err);}
+.log-dot.info{background:var(--gold);}
+.log-dot.ai{background:var(--violet2);animation:pulse-fade 1s infinite;}
+.log-txt{font-family:'JetBrains Mono',monospace;font-size:0.42rem;color:var(--muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.log-time{font-family:'JetBrains Mono',monospace;font-size:0.4rem;color:#333;flex-shrink:0;}
+
+/* Responsive */
+@media(max-width:768px){
+  .skt-sidebar{display:none;}
+  .pane-content{padding:16px 14px 60px;}
+  .akshara-grid{grid-template-columns:repeat(auto-fill,minmax(90px,1fr));}
+  .dhatu-grid{grid-template-columns:1fr;}
+  .inf-results{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="skt-header">
+  <div class="skt-brand">
+    <span class="skt-brand-om">ॐ</span>
+    <div class="skt-brand-text">
+      <span class="b1">Sanskrit Dimension</span>
+      <span class="b2">culturalmusings.com · Phase 2</span>
+    </div>
+  </div>
+  <div class="skt-nav-tabs">
+    <button class="skt-tab active" onclick="showPane('aksharas')">📐 50 Aksharas</button>
+    <button class="skt-tab" onclick="showPane('dhatu')">🌿 Dhātu Explorer</button>
+    <button class="skt-tab" onclick="showPane('inference')">⚡ Inference Engine</button>
+  </div>
+  <div class="skt-header-right">
+    <div class="skt-key-inp-wrap">
+      <div class="skt-mode-dot" id="modeDot"></div>
+      <input class="skt-key-inp" id="headerKeyInp" type="password" placeholder="paste API key…" onpaste="handleHeaderKeyPaste(event)" oninput="handleHeaderKeyInput(this.value)"/>
+    </div>
+  </div>
+</header>
+
+<!-- ── LAYOUT ── -->
+<div class="skt-layout">
+  <!-- Sidebar -->
+  <nav class="skt-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">Phoneme Science</div>
+      <div class="sb-item active" onclick="showPane('aksharas');setSbActive(this)">
+        <div class="sb-dot lit"></div>
+        <div><div class="sb-label">50 Aksharas Map</div><div class="sb-sub">chakra · deity · swara</div></div>
+      </div>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">Verbal Roots</div>
+      <div class="sb-item" onclick="showPane('dhatu');setSbActive(this)">
+        <div class="sb-dot"></div>
+        <div><div class="sb-label">Dhātu Explorer</div><div class="sb-sub">200 roots · cross-linked</div></div>
+      </div>
+      <div class="sb-item" onclick="showPaneDhatu('gaṇa');setSbActive(this)">
+        <div class="sb-dot"></div>
+        <div><div class="sb-label">Gaṇa Groups</div><div class="sb-sub">10 Paninian classes</div></div>
+      </div>
+      <div class="sb-item" onclick="showPaneDhatu('portal');setSbActive(this)">
+        <div class="sb-dot"></div>
+        <div><div class="sb-label">Portal Cross-Links</div><div class="sb-sub">Lalitā · Rudram · Swara</div></div>
+      </div>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">Live Tools</div>
+      <div class="sb-item" onclick="showPane('inference');setSbActive(this)">
+        <div class="sb-dot"></div>
+        <div><div class="sb-label">Inference Engine</div><div class="sb-sub">any word → full analysis</div></div>
+      </div>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">Corpus Stats</div>
+      <div style="padding:8px 12px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.38rem;color:var(--muted);line-height:2;">
+          Aksharas: 50<br/>
+          Dhātu roots: 200<br/>
+          Lalitā links: <span id="statLalita">—</span><br/>
+          Rudram links: <span id="statRudram">—</span><br/>
+          Swara links: <span id="statSwara">—</span><br/>
+          Inferences run: <span id="statInf">0</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <main class="skt-main">
+
+    <!-- ════════════════════════ PANE 1: AKSHARAS ════════════════════════ -->
+    <div class="skt-pane active" id="pane-aksharas">
+      <div class="pane-content">
+        <div class="pane-eyebrow">Sanskrit Dimension · Tool 1 of 3</div>
+        <div class="pane-title">50 Aksharas — Sacred Phoneme Map</div>
+        <div class="pane-sub">Each of the 50 Sanskrit phonemes carries a precise articulatory position (Sthāna), presiding deity, Vedic swara correspondence, chakra seat, and nāda quality. Click any akshara to expand its full data and cross-portal links.</div>
+
+        <!-- Filters -->
+        <div class="akshara-filters">
+          <button class="ak-filter-btn active" onclick="filterAk('all',this)">All 50</button>
+          <button class="ak-filter-btn" onclick="filterAk('sthana-kantha',this)">Kantha (Throat)</button>
+          <button class="ak-filter-btn" onclick="filterAk('sthana-talu',this)">Tālu (Palate)</button>
+          <button class="ak-filter-btn" onclick="filterAk('sthana-murdha',this)">Mūrdha (Cerebral)</button>
+          <button class="ak-filter-btn" onclick="filterAk('sthana-danta',this)">Danta (Dental)</button>
+          <button class="ak-filter-btn" onclick="filterAk('sthana-ostha',this)">Oṣṭha (Labial)</button>
+          <button class="ak-filter-btn" onclick="filterAk('vowels',this)">Vowels</button>
+          <button class="ak-filter-btn" onclick="filterAk('consonants',this)">Consonants</button>
+        </div>
+
+        <!-- Grid -->
+        <div class="akshara-grid" id="aksharaGrid"></div>
+
+        <!-- Detail panel -->
+        <div class="ak-detail" id="akDetail"></div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════ PANE 2: DHĀTU ════════════════════════ -->
+    <div class="skt-pane" id="pane-dhatu">
+      <div class="pane-content">
+        <div class="pane-eyebrow">Sanskrit Dimension · Tool 2 of 3</div>
+        <div class="pane-title">Dhātu Explorer — Verbal Root Database</div>
+        <div class="pane-sub">200 core Sanskrit verbal roots cross-linked to every occurrence in Lalitā Sahasranāma, Triśatī, Sri Rudram, and the Sapta Swara names. Each dhātu entry includes its Pāṇinian gaṇa, primary meaning, semantic derivatives, and AI-generated scholarly commentary.</div>
+
+        <!-- Key status -->
+        <div class="key-status-bar">
+          <div class="skt-mode-dot" id="dhKey"></div>
+          <div class="key-status-txt" id="dhKeyTxt">Paste a Groq / Gemini / OpenRouter key for AI commentary</div>
+          <span class="key-status-badge none" id="dhKeyBadge">NO KEY</span>
+        </div>
+
+        <!-- Search + filters -->
+        <div class="dhatu-search-bar">
+          <input class="dhatu-inp" id="dhatuSearch" type="text" placeholder="Search root, meaning, or cross-link (e.g. śrī, rud, mat)…" oninput="filterDhatu()"/>
+        </div>
+        <div class="dhatu-filter-wrap" id="ganaFilters"></div>
+
+        <!-- Grid -->
+        <div class="dhatu-grid" id="dhatuGrid"></div>
+
+        <!-- Detail panel -->
+        <div class="dhatu-detail" id="dhatuDetail"></div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════ PANE 3: INFERENCE ════════════════════════ -->
+    <div class="skt-pane" id="pane-inference">
+      <div class="pane-content">
+        <div class="pane-eyebrow">Sanskrit Dimension · Tool 3 of 3</div>
+        <div class="pane-title">Live Pāṇinian Inference Engine</div>
+        <div class="pane-sub">Type any Sanskrit word and receive instant scholarly analysis across five dimensions: Dhātu derivation with Pāṇinian sūtra, Chakra seat and articulatory Sthāna, Cross-portal links to matching Lalitā/Rudram/Swara names, Rasa and Ayurvedic dosha correspondences, and Neuroscience note on vagal pathways and brainwave effects.</div>
+
+        <!-- Key entry panel -->
+        <div style="background:rgba(0,0,0,0.3);border:1px solid var(--border2);border-radius:5px;padding:14px 18px;margin-bottom:18px;">
+          <div class="key-inp-row">
+            <div class="skt-mode-dot" id="infKey"></div>
+            <input class="key-inp" id="infKeyInp" type="password" placeholder="gsk_… / AIzaSy… / sk-or…  (locked on paste)" onpaste="handleInfKeyPaste(event)"/>
+            <span class="key-status-badge none" id="infKeyBadge">NO KEY</span>
+          </div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.38rem;color:var(--muted);margin-top:6px;" id="infKeyNote">
+            Free keys: Groq → console.groq.com · Gemini → aistudio.google.com · OpenRouter → openrouter.ai
+          </div>
+        </div>
+
+        <!-- Input hero -->
+        <div class="inf-hero">
+          <div class="inf-title">✦ Analyse Any Sanskrit Word</div>
+          <div class="inf-sub">Works with any Sanskrit word, Vedic term, mantra component, or even transliterated IAST input. Results appear across five scholarly cards below.</div>
+          <div class="inf-input-row">
+            <input class="inf-word-inp" id="infWordInp" type="text" placeholder="e.g. Lalitā · Śiva · kuṇḍalinī · namas · hrīṃ…"
+              onkeydown="if(event.key==='Enter')runInference()"/>
+            <button class="inf-btn" id="infBtn" onclick="runInference()">⚡ Analyse</button>
+          </div>
+          <div class="inf-examples">
+            <span class="inf-ex-label">Try:</span>
+            <span class="inf-ex" onclick="quickInfer('Lalitā')">Lalitā</span>
+            <span class="inf-ex" onclick="quickInfer('Rudra')">Rudra</span>
+            <span class="inf-ex" onclick="quickInfer('Śakti')">Śakti</span>
+            <span class="inf-ex" onclick="quickInfer('namas')">namas</span>
+            <span class="inf-ex" onclick="quickInfer('ānanda')">ānanda</span>
+            <span class="inf-ex" onclick="quickInfer('kuṇḍalinī')">kuṇḍalinī</span>
+            <span class="inf-ex" onclick="quickInfer('Sahasrāra')">Sahasrāra</span>
+            <span class="inf-ex" onclick="quickInfer('hrīṃ')">hrīṃ</span>
+          </div>
+        </div>
+
+        <!-- Results area -->
+        <div id="infResults"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Log strip -->
+<div class="log-strip">
+  <div class="log-dot info" id="logDot"></div>
+  <div class="log-txt" id="logTxt">Sanskrit Dimension ready · Phase 2 · culturalmusings.com</div>
+  <div class="log-time" id="logTime"></div>
+</div>
+
+<script>
+'use strict';
+// ═══════════════════════════════════════════════════════
+//  KEY VAULT (inline, memory-only, auto-lock)
+// ═══════════════════════════════════════════════════════
+let apiKey = '';
+let apiProvider = '';
+let apiLocked = false;
+let inferenceCount = 0;
+
+function detectProvider(k) {
+  if(!k) return '';
+  if(k.startsWith('gsk_') || k.startsWith('gsk-')) return 'groq';
+  if(k.startsWith('AIzaSy') || k.startsWith('AIza')) return 'gemini';
+  if(k.startsWith('sk-or')) return 'openrouter';
+  return 'unknown';
+}
+
+function lockKey(k) {
+  apiKey = k.trim();
+  apiProvider = detectProvider(apiKey);
+  apiLocked = true;
+  updateKeyUI();
+  log('ok', `Key locked (${apiProvider}) — AI mode active`);
+}
+
+function updateKeyUI() {
+  const haKey = !!apiKey;
+  const provLabel = {groq:'GROQ',gemini:'GEMINI',openrouter:'OPENROUTER',unknown:'CUSTOM','':'NONE'}[apiProvider]||'';
+  ['modeDot','dhKey','infKey'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.classList.toggle('ok', haKey);
+  });
+  const dhBadge = document.getElementById('dhKeyBadge');
+  const infBadge = document.getElementById('infKeyBadge');
+  const dhTxt = document.getElementById('dhKeyTxt');
+  const infNote = document.getElementById('infKeyNote');
+  if(dhBadge) { dhBadge.textContent = haKey ? provLabel : 'NO KEY'; dhBadge.className = `key-status-badge ${haKey?'ok':'none'}`; }
+  if(infBadge) { infBadge.textContent = haKey ? provLabel : 'NO KEY'; infBadge.className = `key-status-badge ${haKey?'ok':'none'}`; }
+  if(dhTxt) dhTxt.textContent = haKey ? `${provLabel} key active — click any dhātu for AI commentary` : 'Paste a Groq / Gemini / OpenRouter key for AI commentary';
+  if(infNote) infNote.textContent = haKey ? `${provLabel} key active — analyses run at ~2,000 tokens each` : 'Free keys: Groq → console.groq.com · Gemini → aistudio.google.com · OpenRouter → openrouter.ai';
+  // Hide key input once locked
+  const hInp = document.getElementById('headerKeyInp');
+  if(hInp && apiLocked) { hInp.value=''; hInp.placeholder = `${provLabel} active ✓`; hInp.style.color='var(--green-ok)'; }
+  const infInp = document.getElementById('infKeyInp');
+  if(infInp && apiLocked) { infInp.value=''; infInp.style.display='none'; infBadge && (infBadge.style.display=''); }
+}
+
+function handleHeaderKeyPaste(e) {
+  e.preventDefault();
+  const k = (e.clipboardData||window.clipboardData).getData('text').trim();
+  if(k.length >= 8) lockKey(k);
+}
+function handleHeaderKeyInput(v) {
+  if(!apiLocked && v.trim().length >= 20) setTimeout(() => lockKey(v.trim()), 600);
+}
+function handleInfKeyPaste(e) {
+  e.preventDefault();
+  const k = (e.clipboardData||window.clipboardData).getData('text').trim();
+  if(k.length >= 8) lockKey(k);
+}
+
+// ── AI call ──
+async function callAI(prompt, maxTokens=1800) {
+  if(!apiKey) throw new Error('No API key — paste one above.');
+  if(apiProvider==='groq') return callGroq(prompt, maxTokens);
+  if(apiProvider==='gemini') return callGemini(prompt, maxTokens);
+  if(apiProvider==='openrouter' || apiProvider==='unknown') return callOpenRouter(prompt, maxTokens);
+  return callGroq(prompt, maxTokens);
+}
+async function callGroq(prompt, maxTokens) {
+  const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':`Bearer ${apiKey}`},
+    body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:Math.min(maxTokens,8000),messages:[{role:'user',content:prompt}]})
+  });
+  if(!r.ok){const t=await r.text();throw new Error(`Groq ${r.status}: ${t.slice(0,140)}`);}
+  const d=await r.json(); return d.choices?.[0]?.message?.content||'';
+}
+async function callGemini(prompt, maxTokens) {
+  const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{maxOutputTokens:Math.min(maxTokens,8192)}})
+  });
+  if(!r.ok) throw new Error(`Gemini ${r.status}`);
+  const d=await r.json(); return d.candidates?.[0]?.content?.parts?.[0]?.text||'';
+}
+async function callOpenRouter(prompt, maxTokens) {
+  const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':`Bearer ${apiKey}`,'HTTP-Referer':'https://culturalmusings.com','X-Title':'CulturalMusings Sanskrit Dimension'},
+    body:JSON.stringify({model:'meta-llama/llama-3.3-70b-instruct:free',max_tokens:Math.min(maxTokens,8000),messages:[{role:'user',content:prompt}]})
+  });
+  if(!r.ok) throw new Error(`OpenRouter ${r.status}`);
+  const d=await r.json(); return d.choices?.[0]?.message?.content||'';
+}
+
+// ═══════════════════════════════════════════════════════
+//  DATA — 50 AKSHARAS
+// ═══════════════════════════════════════════════════════
+const AKSHARAS = [
+  // Vowels — Kantha
+  {l:'अ',i:'a',sthana:'Kantha',type:'vowel',deity:'Brahmā',chakra:'Mūlādhāra',swara:'Sa',rasa:'Śānta',dosha:'Vāta',nada:'Primal vowel — source of all sound; Brahman in its unmanifest aspect',lalita:['Amba (N.956)','Anavadyāṅgī (N.49)'],rudram:['1st phoneme of Namakam'],swara_link:'Sa — Mūlādhāra'},
+  {l:'आ',i:'ā',sthana:'Kantha',type:'vowel',deity:'Brahmā (extended)',chakra:'Mūlādhāra',swara:'Sa',rasa:'Vīra',dosha:'Vāta',nada:'Long ā — the breath of expansion, Śakti stretching into space',lalita:['Ādhārā (N.862)'],rudram:['Anuvakas 1-11'],swara_link:'Sa — extended tone'},
+  {l:'इ',i:'i',sthana:'Tālu',type:'vowel',deity:'Sarasvatī',chakra:'Svādhiṣṭhāna',swara:'Ri',rasa:'Karuṇa',dosha:'Pitta',nada:'Short i — Śakti energy darting inward, discrimination, subtlety',lalita:['Iṣṭā (N.442)'],rudram:['Svara syllable'],swara_link:'Ri — palatal brightness'},
+  {l:'ई',i:'ī',sthana:'Tālu',type:'vowel',deity:'Mahāśakti',chakra:'Svādhiṣṭhāna',swara:'Ri',rasa:'Śṛṅgāra',dosha:'Pitta',nada:'Long ī — the Hrīṃ-bīja seed of Māyā, feminine creative power sustained',lalita:['Bīja ī (Triśatī bīja 3)'],rudram:['Chamakam svara'],swara_link:'Ri — sustained feminine'},
+  {l:'उ',i:'u',sthana:'Oṣṭha',type:'vowel',deity:'Viṣṇu',chakra:'Maṇipūra',swara:'Ga',rasa:'Vīra',dosha:'Kapha',nada:'Short u — solar plexus power, preservation, the holding note',lalita:['Ugrarūpā (N.635)'],rudram:['AUM — U component'],swara_link:'Ga — solar tone'},
+  {l:'ऊ',i:'ū',sthana:'Oṣṭha',type:'vowel',deity:'Viṣṇu (Ananta)',chakra:'Maṇipūra',swara:'Ga',rasa:'Adbhuta',dosha:'Kapha',nada:'Long ū — cosmic preservation extended, Ananta the infinite serpent',lalita:['Ūrdhvakeśī (N.487)'],rudram:['Phonemic depth'],swara_link:'Ga — deep solar'},
+  {l:'ऋ',i:'ṛ',sthana:'Mūrdha',type:'vowel',deity:'Lakṣmī',chakra:'Anāhata',swara:'Ma',rasa:'Śānta',dosha:'Pitta-Kapha',nada:'Vedic ṛ — heart center; cerebral liquid vowel bridging heaven and earth',lalita:['Ṛjutā (N.731)'],rudram:['Rigveda matrix sound'],swara_link:'Ma — cardiac bridge'},
+  {l:'ॠ',i:'ṝ',sthana:'Mūrdha',type:'vowel',deity:'Mahālakṣmī',chakra:'Anāhata',swara:'Ma',rasa:'Śānta',dosha:'Pitta',nada:'Long ṝ — extended heart resonance; rarely used, deeply transformative',lalita:['Rare divine name root'],rudram:['Vedic long vowel'],swara_link:'Ma — extended cardiac'},
+  {l:'ए',i:'e',sthana:'Kantha-Tālu',type:'vowel',deity:'Indra',chakra:'Viśuddha',swara:'Pa',rasa:'Adbhuta',dosha:'Vāta-Pitta',nada:'Diphthong e — throat-palate junction; Indra\'s lightning of consciousness',lalita:['Ekaprabhā (N.400)'],rudram:['svara shift points'],swara_link:'Pa — throat-palate junction'},
+  {l:'ऐ',i:'ai',sthana:'Kantha-Tālu',type:'vowel',deity:'Sarasvatī-Indra',chakra:'Viśuddha',swara:'Pa',rasa:'Vīra',dosha:'Vāta',nada:'Diphthong ai — the Aim-bīja of Sarasvatī; knowledge crystallising',lalita:['Aim-bīja Triśatī'],rudram:['Svara Sthāna'],swara_link:'Pa — Sarasvatī resonance'},
+  {l:'ओ',i:'o',sthana:'Kantha-Oṣṭha',type:'vowel',deity:'Varuṇa',chakra:'Ājñā',swara:'Dha',rasa:'Śānta',dosha:'Kapha-Vāta',nada:'Diphthong o — the rounded cosmic OM-origin; brow center activation',lalita:['Om-pradhānā (N.999)'],rudram:['AUM — O component'],swara_link:'Dha — brow center'},
+  {l:'औ',i:'au',sthana:'Kantha-Oṣṭha',type:'vowel',deity:'Varuṇa (Saumya)',chakra:'Ājñā',swara:'Dha',rasa:'Śṛṅgāra',dosha:'Kapha',nada:'Diphthong au — gentle oceanic expansion; Varuṇa\'s cosmic order',lalita:['Auṣadhī (N.500)'],rudram:['Extended svara'],swara_link:'Dha — oceanic brow'},
+  // Consonants — Ka-varga (Kantha)
+  {l:'क',i:'ka',sthana:'Kantha',type:'consonant',deity:'Brahmā',chakra:'Mūlādhāra',swara:'Sa',rasa:'Vīra',dosha:'Vāta',nada:'Ka-kāra — first consonant, first creative impulse; Ka is Brahmā the creator',lalita:['Kāmeśvarī (N.1)','Kāmakalā (Triśatī bīja)'],rudram:['Anuvaka 1 — namas-te'],swara_link:'Sa — primal consonant'},
+  {l:'ख',i:'kha',sthana:'Kantha',type:'consonant',deity:'Śiva (Ākāśa)',chakra:'Mūlādhāra',swara:'Sa',rasa:'Adbhuta',dosha:'Vāta',nada:'Kha — space (ākāśa) itself; the void into which creation unfolds',lalita:['Kha-rūpā — space form'],rudram:['Phonemic space'],swara_link:'Sa — ākāśa tone'},
+  {l:'ग',i:'ga',sthana:'Kantha',type:'consonant',deity:'Gaṇeśa',chakra:'Mūlādhāra',swara:'Sa',rasa:'Śānta',dosha:'Vāta-Kapha',nada:'Ga — Gaṇeśa the remover of obstacles; Ga-ṇa means group-lord',lalita:['Gaṇamba (N.870)'],rudram:['Anuvaka 2 invocation'],swara_link:'Sa — Gaṇeśa root'},
+  {l:'घ',i:'gha',sthana:'Kantha',type:'consonant',deity:'Indra',chakra:'Maṇipūra',swara:'Ga',rasa:'Raudra',dosha:'Pitta',nada:'Gha — thunderous resonance; Indra\'s vajra striking the clouds',lalita:['Ghanī (thick-rooted) names'],rudram:['Anuvaka storm imagery'],swara_link:'Ga — thunder resonance'},
+  {l:'ङ',i:'ṅa',sthana:'Kantha-Nāsikā',type:'consonant',deity:'Skanda',chakra:'Maṇipūra',swara:'Ga',rasa:'Vīra',dosha:'Vāta',nada:'Ṅa — nasal guttural; rare, the hidden resonance of Skanda-Murugan',lalita:['Rare phonemic presence'],rudram:['Nasal cadence points'],swara_link:'Ga — nasal solar'},
+  // Ca-varga (Tālu)
+  {l:'च',i:'ca',sthana:'Tālu',type:'consonant',deity:'Sarasvatī',chakra:'Svādhiṣṭhāna',swara:'Ri',rasa:'Śṛṅgāra',dosha:'Pitta',nada:'Ca — palatal brightness; the Cit of Saccidānanda; pure consciousness',lalita:['Cidagnikuṇḍa (N.4)','Cinmayī (N.249)'],rudram:['Chamakam — ca root'],swara_link:'Ri — consciousness tone'},
+  {l:'छ',i:'cha',sthana:'Tālu',type:'consonant',deity:'Durgā',chakra:'Svādhiṣṭhāna',swara:'Ri',rasa:'Vīra',dosha:'Pitta-Kapha',nada:'Cha — the aspirated palatal; protective shield of Durgā',lalita:['Chāyā (N.562)'],rudram:['Phonemic protection'],swara_link:'Ri — protective palatal'},
+  {l:'ज',i:'ja',sthana:'Tālu',type:'consonant',deity:'Viṣṇu (Jñāna)',chakra:'Anāhata',swara:'Ma',rasa:'Śānta',dosha:'Pitta',nada:'Ja — birth and life; Jaya victory; Jñāna the knowing',lalita:['Jagat-dhātrī (N.525)','Jayā (N.177)'],rudram:['Jaya mantra contexts'],swara_link:'Ma — vital birth tone'},
+  {l:'झ',i:'jha',sthana:'Tālu',type:'consonant',deity:'Kāmadeva',chakra:'Svādhiṣṭhāna',swara:'Ri',rasa:'Śṛṅgāra',dosha:'Pitta',nada:'Jha — aspirated palatal; gentle tinkling as of Kāma\'s flower arrows',lalita:['Subtle name presences'],rudram:['Acoustic color'],swara_link:'Ri — tinkling palatal'},
+  {l:'ञ',i:'ña',sthana:'Tālu-Nāsikā',type:'consonant',deity:'Rati',chakra:'Svādhiṣṭhāna',swara:'Ri',rasa:'Śṛṅgāra',dosha:'Pitta-Kapha',nada:'Ña — palatal nasal; the resonance of love itself, Rati Kāma\'s consort',lalita:['Nyasa contexts'],rudram:['Rare nasal palatal'],swara_link:'Ri — love resonance'},
+  // Ṭa-varga (Mūrdha)
+  {l:'ट',i:'ṭa',sthana:'Mūrdha',type:'consonant',deity:'Rudra',chakra:'Viśuddha',swara:'Pa',rasa:'Raudra',dosha:'Pitta-Vāta',nada:'Ṭa — cerebral explosive; Rudra\'s transforming fire, the retroflex thunder',lalita:['Ṭhakur-rūpā (variant)'],rudram:['Anuvaka 1 — Rudra invocations'],swara_link:'Pa — Rudra thunder'},
+  {l:'ठ',i:'ṭha',sthana:'Mūrdha',type:'consonant',deity:'Bhairava',chakra:'Viśuddha',swara:'Pa',rasa:'Bhayānaka',dosha:'Vāta-Pitta',nada:'Ṭha — fierce cerebral; Bhairava\'s roar cutting through ignorance',lalita:['Bhairavī (N.354)'],rudram:['Fierce Rudra aspects'],swara_link:'Pa — Bhairava tone'},
+  {l:'ड',i:'ḍa',sthana:'Mūrdha',type:'consonant',deity:'Kālī',chakra:'Sahasrāra',swara:'Ni',rasa:'Raudra',dosha:'Vāta',nada:'Ḍa — deep cerebral; Ḍamaru the drum of Śiva/Kālī marking cosmic time',lalita:['Damarī (N.892)'],rudram:['Ḍamaru svara patterns'],swara_link:'Ni — cosmic drum'},
+  {l:'ढ',i:'ḍha',sthana:'Mūrdha',type:'consonant',deity:'Mahākālī',chakra:'Sahasrāra',swara:'Ni',rasa:'Raudra',dosha:'Vāta-Pitta',nada:'Ḍha — aspirated cerebral; the deepest dissolution sound of Mahākālī',lalita:['Deep dissolution names'],rudram:['Terminal anuvakas'],swara_link:'Ni — Mahākālī dissolution'},
+  {l:'ण',i:'ṇa',sthana:'Mūrdha-Nāsikā',type:'consonant',deity:'Śiva-Śakti union',chakra:'Sahasrāra',swara:'Ni',rasa:'Śānta',dosha:'Kapha',nada:'Ṇa — cerebral nasal; the divine union of Śiva-Śakti in the crown',lalita:['Śiva-Śakti contexts throughout'],rudram:['Namakam close syllables'],swara_link:'Ni — union crown'},
+  // Ta-varga (Danta)
+  {l:'त',i:'ta',sthana:'Danta',type:'consonant',deity:'Yama',chakra:'Maṇipūra',swara:'Ga',rasa:'Bhayānaka',dosha:'Vāta-Pitta',nada:'Ta — dental stop; Tattvam truth; Tantra the loom of reality',lalita:['Tattvādhipā (N.714)'],rudram:['Tat savitur — Gāyatrī root'],swara_link:'Ga — truth tone'},
+  {l:'थ',i:'tha',sthana:'Danta',type:'consonant',deity:'Dharma',chakra:'Maṇipūra',swara:'Ga',rasa:'Vīra',dosha:'Pitta',nada:'Tha — aspirated dental; the breath of Dharma, righteousness exhaled',lalita:['Dharmic name contexts'],rudram:['Dharma phoneme contexts'],swara_link:'Ga — dharmic breath'},
+  {l:'द',i:'da',sthana:'Danta',type:'consonant',deity:'Viṣṇu (Dātā)',chakra:'Anāhata',swara:'Ma',rasa:'Śānta',dosha:'Pitta-Kapha',nada:'Da — the giving; Dā root of Dāna gift; Devī gives life itself',lalita:['Dakṣiṇā (N.611)','Dānavatī (N.666)'],rudram:['Chamakam giving verses'],swara_link:'Ma — giving tone'},
+  {l:'ध',i:'dha',sthana:'Danta',type:'consonant',deity:'Lakṣmī',chakra:'Anāhata',swara:'Ma',rasa:'Śṛṅgāra',dosha:'Pitta-Kapha',nada:'Dha — the holding; Dharā the earth; Dhana wealth; the sustaining note',lalita:['Dhanadā (N.623)'],rudram:['Chamakam wealth verses'],swara_link:'Ma — Dhaivata cognate'},
+  {l:'न',i:'na',sthana:'Danta-Nāsikā',type:'consonant',deity:'Varuṇa',chakra:'Viśuddha',swara:'Pa',rasa:'Śānta',dosha:'Kapha-Vāta',nada:'Na — the nasal dental; Namas the bow; Nāda sound itself; the cosmic obeisance',lalita:['Nādarūpā (N.622)','Namas-te (all)'],rudram:['Namakam — every verse'],swara_link:'Pa — namas resonance'},
+  // Pa-varga (Oṣṭha)
+  {l:'प',i:'pa',sthana:'Oṣṭha',type:'consonant',deity:'Viṣṇu (Pāla)',chakra:'Viśuddha',swara:'Pa',rasa:'Vīra',dosha:'Kapha-Vāta',nada:'Pa — the protecting labial; Pañcama the fifth swara; Pāla the guardian',lalita:['Paramā (N.849)','Parāparā (N.850)'],rudram:['Pa-vaṃśa — labial group'],swara_link:'Pa — self-naming swara'},
+  {l:'फ',i:'pha',sthana:'Oṣṭha',type:'consonant',deity:'Indra',chakra:'Viśuddha',swara:'Pa',rasa:'Adbhuta',dosha:'Vāta-Pitta',nada:'Pha — explosive labial; Phaṇa the serpent hood; Śeṣa\'s cosmic canopy',lalita:['Phaṇi (serpent contexts)'],rudram:['Phonemic explosive'],swara_link:'Pa — serpent hood'},
+  {l:'ब',i:'ba',sthana:'Oṣṭha',type:'consonant',deity:'Brahmā (manifestation)',chakra:'Mūlādhāra',swara:'Sa',rasa:'Vīra',dosha:'Kapha',nada:'Ba — the binding; Bahu much-multiplied; Bala strength; Bindu the point',lalita:['Bahurūpā (N.725)','Bindu (N.500)'],rudram:['Bala invocations'],swara_link:'Sa — Bindu point'},
+  {l:'भ',i:'bha',sthana:'Oṣṭha',type:'consonant',deity:'Bhūmi (Earth)',chakra:'Mūlādhāra',swara:'Sa',rasa:'Vīra',dosha:'Kapha-Pitta',nada:'Bha — the becoming; Bhava existence; Bhavanam the cosmos; Bhūmi earth',lalita:['Bhavānī (N.140)','Bhagavatī (N.73)'],rudram:['Bhava-Śarva — N.10'],swara_link:'Sa — earth-becoming'},
+  {l:'म',i:'ma',sthana:'Oṣṭha-Nāsikā',type:'consonant',deity:'Mitra',chakra:'Anāhata',swara:'Ma',rasa:'Śṛṅgāra',dosha:'Kapha',nada:'Ma — the mother syllable; Māyā measure; Mātā mother; Ma is the mind itself',lalita:['Māyā (N.113)','Mātā (N.89)','Mahādevī (N.99)'],rudram:['Madhyama — self-naming'],swara_link:'Ma — mother-naming swara'},
+  // Ya-Ra-La-Va (Semi-vowels)
+  {l:'य',i:'ya',sthana:'Tālu',type:'semivowel',deity:'Vāyu',chakra:'Anāhata',swara:'Ma',rasa:'Adbhuta',dosha:'Vāta',nada:'Ya — wind and breath; Yoga union; Yāgam sacrifice; Yoginī the practitioner',lalita:['Yoginī (N.384)','Yajña-rūpā (N.396)'],rudram:['Yoga phoneme base'],swara_link:'Ma — yogic breath'},
+  {l:'र',i:'ra',sthana:'Mūrdha',type:'semivowel',deity:'Agni',chakra:'Maṇipūra',swara:'Ga',rasa:'Raudra',dosha:'Pitta',nada:'Ra — fire itself (Agni); Rajas activity; Rudra the howler; Rāga the passion',lalita:['Rājarājeśvarī (N.249)','Rāgaśaktī'],rudram:['Rudra — Ra is his fire core'],swara_link:'Ga — fire-Rudra'},
+  {l:'ल',i:'la',sthana:'Danta',type:'semivowel',deity:'Indra (vidyut)',chakra:'Mūlādhāra',swara:'Sa',rasa:'Śānta',dosha:'Vāta',nada:'La — the lateral liquid; Lakṣmī grace; Lalitā the playful; La-kāra the electrical',lalita:['Lalitā (N.276)','Lakṣmī root'],rudram:['La-kāra — electrical force'],swara_link:'Sa — Lalitā root sound'},
+  {l:'व',i:'va',sthana:'Danta-Oṣṭha',type:'semivowel',deity:'Varuṇa',chakra:'Svādhiṣṭhāna',swara:'Ri',rasa:'Śṛṅgāra',dosha:'Kapha-Vāta',nada:'Va — water and flow; Varuṇa cosmic ocean; Vidyā knowledge-flow; Vāyu\'s bridge',lalita:['Vidyā (N.188)','Varadā (N.559)'],rudram:['Varuṇa invocations'],swara_link:'Ri — water-flow'},
+  // Śa-Ṣa-Sa-Ha (Sibilants + Aspirate)
+  {l:'श',i:'śa',sthana:'Tālu',type:'sibilant',deity:'Sarasvatī',chakra:'Viśuddha',swara:'Pa',rasa:'Śānta',dosha:'Vāta-Kapha',nada:'Śa — the palatal sibilant of Śiva; Śānti peace; Śakti power; Śrī auspiciousness',lalita:['Śiva (N.55)','Śakti (N.99)','Śrī (N.1)'],rudram:['Śiva invocations throughout'],swara_link:'Pa — Śiva-Śakti'},
+  {l:'ष',i:'ṣa',sthana:'Mūrdha',type:'sibilant',deity:'Rudra (fierce)',chakra:'Ājñā',swara:'Dha',rasa:'Raudra',dosha:'Pitta-Vāta',nada:'Ṣa — cerebral sibilant; Ṣaṭcakra six lotuses; fierce Rudra\'s whisper',lalita:['Ṣaḍcakra-rūpā (N.598)'],rudram:['Fierce whisper of Rudra'],swara_link:'Dha — ājñā sibilant'},
+  {l:'स',i:'sa',sthana:'Danta',type:'sibilant',deity:'Sūrya',chakra:'Maṇipūra',swara:'Ga',rasa:'Vīra',dosha:'Pitta',nada:'Sa — the solar sibilant; Sūrya the sun; Sahasrā thousand; Sat existence',lalita:['Sahasranāma (the name-form)','Sat-cit-ānandā'],rudram:['Sa — Chamakam open'],swara_link:'Ga — solar existence'},
+  {l:'ह',i:'ha',sthana:'Kantha',type:'aspirate',deity:'Śiva (Haṃsa)',chakra:'Sahasrāra',swara:'Ni',rasa:'Adbhuta',dosha:'Vāta-Kapha',nada:'Ha — the crown aspirate; Haṃsa the divine swan; Ha-kāra the out-breath of all existence',lalita:['Haṃsā (N.896)','Hrīṃ-bīja'],rudram:['AUM — Ha completion'],swara_link:'Ni — Haṃsa crown'},
+  // Special
+  {l:'ळ',i:'ḷa',sthana:'Mūrdha',type:'special',deity:'Śakti (rare)',chakra:'Mūlādhāra',swara:'Sa',rasa:'Śānta',dosha:'Kapha',nada:'Ḷa — Vedic lateral cerebral; extremely rare; primordial earth vibration',lalita:['Vedic root appearances'],rudram:['Ancient Vedic contexts'],swara_link:'Sa — primordial earth'},
+  {l:'क्ष',i:'kṣa',sthana:'Compound',type:'special',deity:'Viṣṇu-Śiva',chakra:'Ājñā',swara:'Dha',rasa:'Adbhuta',dosha:'Vāta-Pitta',nada:'Kṣa — compound of Ka+Ṣa; Kṣetra the field; Kṣobha trembling; Kṣaṇa instant',lalita:['Kṣetra-rūpā (N.766)'],rudram:['Kṣetra invocations'],swara_link:'Dha — field-moment'},
+  {l:'ज्ञ',i:'jña',sthana:'Compound',type:'special',deity:'Dattātreya',chakra:'Ājñā',swara:'Dha',rasa:'Śānta',dosha:'Vāta',nada:'Jña — the knowing; Jñāna supreme wisdom; compound of Ja+Ña the birth of understanding',lalita:['Jñāna-rūpā (N.800)'],rudram:['Wisdom invocations'],swara_link:'Dha — brow wisdom'},
+  {l:'ं',i:'anusvāra',sthana:'Nāsikā',type:'special',deity:'Śiva (bindu)',chakra:'Sahasrāra',swara:'Ni',rasa:'Śānta',dosha:'Vāta',nada:'Anusvāra — the nasal bindu; the point of OM completing; Om̐ the crown vibration',lalita:['OM (N.999-1000)'],rudram:['Every mantra terminal'],swara_link:'Ni — OM completion'},
+  {l:'ः',i:'visarga',sthana:'All',type:'special',deity:'Brahman',chakra:'All chakras',swara:'All swaras',rasa:'Śānta',dosha:'Tridosha',nada:'Visarga — the cosmic exhale; Brahman releasing into creation; the final ha-sound',lalita:['Every verse ending'],rudram:['Namas-te terminal sound'],swara_link:'All — cosmic release'},
+];
+
+// ═══════════════════════════════════════════════════════
+//  DATA — 200 DHĀTU ROOTS
+// ═══════════════════════════════════════════════════════
+const DHATUS = [
+  {r:'√śrī',d:'श्री',g:'Bhvādi (I)',m:'to spread, to diffuse, to protect — root of all auspiciousness',panini:'Śrī-ṣu śobhane (Dhātupāṭha 1.1)',lal:['Śrī Mātā (N.1)','Śrī Mahārājñī (N.2)','Śrī Lalitā (N.276)'],rud:['Śrī Rudram title'],sw:['Sa — Śrī the auspicious'],cat:'core'},
+  {r:'√lal',d:'लल',g:'Bhvādi (I)',m:'to sport, to play, to move freely — joyful spontaneous activity',panini:'Lala krīḍāyām (Dhātupāṭha 1.582)',lal:['Lalitā (N.276)','Lāsyapriyā (N.397)'],rud:['Lalitā context'],sw:['Ri — playful tone'],cat:'core'},
+  {r:'√rud',d:'रुद्',g:'Bhvādi (II)',m:'to howl, to cry, to roar — the transforming sound of dissolution',panini:'Ruda ākrandane (1.460)',lal:['Rudra-pūjitā (N.354)'],rud:['Rudra root of all anuvakas'],sw:['Ni — dissolution'],cat:'core'},
+  {r:'√mat',d:'मत्',g:'Bhvādi (I)',m:'to think, to understand, to measure — the measuring mind',panini:'Mana jñāne (Bhvādi)',lal:['Matī (N.533)'],rud:['Mati in Chamakam'],sw:['Ga — thinking tone'],cat:'grammar'},
+  {r:'√vid',d:'विद्',g:'Bhvādi (II)',m:'to know, to find, to exist — root of Veda and Vidyā',panini:'Vida jñāne (2.58)',lal:['Vidyā (N.188)','Mahāvidyā (N.399)'],rud:['Veda root throughout'],sw:['Dha — knowledge tone'],cat:'core'},
+  {r:'√śak',d:'शक्',g:'Bhvādi (I)',m:'to be able, to have power — root of Śakti the cosmic energy',panini:'Śaku śakti-pāne (Bhvādi)',lal:['Śakti (N.99)','Mahāśaktiḥ (N.109)'],rud:['Śakti references'],sw:['Pa — Śakti fifth'],cat:'core'},
+  {r:'√mā',d:'मा',g:'Bhvādi (III)',m:'to measure, to create, to build — root of Māyā and mother',panini:'Māṅ māne (Juhotyādi)',lal:['Māyā (N.113)','Mātā (N.89)'],rud:['Māyā acknowledgment'],sw:['Ga — creative measure'],cat:'core'},
+  {r:'√jan',d:'जन्',g:'Bhvādi (I)',m:'to be born, to produce, to generate — cosmic birth principle',panini:'Jana janane (1.521)',lal:['Janmamṛtyujarātapā (N.310)'],rud:['Jananī in Chamakam'],sw:['Ma — birth tone'],cat:'core'},
+  {r:'√namas',d:'नमस्',g:'Nominal root',m:'to bow, to revere — the root of all obeisance to the divine',panini:'Nama stotre (Nominal)',lal:['All names implicitly'],rud:['Every Namakam verse'],sw:['Pa — bow resonance'],cat:'core'},
+  {r:'√ci',d:'चि',g:'Bhvādi (V)',m:'to collect, to heap — root of Cit pure consciousness',panini:'Citi saṃcaye (Bhvādi)',lal:['Cidagnikuṇḍa (N.4)','Cinmayī (N.249)'],rud:['Cit in synthesis'],sw:['Ri — consciousness'],cat:'philosophy'},
+  {r:'√ānanda',d:'आनन्द',g:'Nominal/√nand',m:'√nand — to rejoice; ānanda bliss itself as a cosmic state',panini:'Nadi samṛddhau (Bhvādi)',lal:['Saccidānanda-rūpā (N.362)'],rud:['Chamakam bliss verses'],sw:['Ni — bliss crown'],cat:'philosophy'},
+  {r:'√kram',d:'क्रम्',g:'Bhvādi (I)',m:'to step, to proceed, to overcome — Vikrama cosmic stride',panini:'Kramu pādavikshepe (1.553)',lal:['Vikramaṇī (N.445)'],rud:['Krama in Vedic sequence'],sw:['Pa — stepping tone'],cat:'grammar'},
+  {r:'√dhā',d:'धा',g:'Juhotyādi (III)',m:'to place, to hold, to sustain — root of Dhātu itself and Dharma',panini:'Ḍu dhāñ dhāraṇa-poṣaṇayoḥ (III.12)',lal:['Jagat-dhātrī (N.525)'],rud:['Dhā throughout Chamakam'],sw:['Ma — sustaining tone'],cat:'core'},
+  {r:'√dā',d:'दा',g:'Juhotyādi (III)',m:'to give, to grant — Dāna the gift; Devī gives liberation',panini:'Ḍuñ dāñ dāne (III.10)',lal:['Dānavatī (N.666)','Dakṣiṇā (N.611)'],rud:['Chamakam — dā in every grant'],sw:['Ma — giving tone'],cat:'core'},
+  {r:'√sthā',d:'स्था',g:'Bhvādi (I)',m:'to stand, to remain, to be established — Sthāna the position',panini:'Ṣṭhā gati-nivṛttau (1.1077)',lal:['Sthairā (N.355)'],rud:['Svara Sthāna — tonal position'],sw:['Sa — stable ground'],cat:'core'},
+  {r:'√gam',d:'गम्',g:'Bhvādi (I)',m:'to go, to move, to attain — Gati motion; Agam coming; Āgama scripture',panini:'Gamuḷ gatau (1.537)',lal:['Gati names'],rud:['Gantavya in Chamakam'],sw:['Ga — moving tone'],cat:'grammar'},
+  {r:'√hṛ',d:'हृ',g:'Bhvādi (I)',m:'to take away, to steal, to captivate — Hṛdaya heart; Haraṇa removal',panini:'Hṛ haraṇe (1.1046)',lal:['Harā (N.251)','Hṛdaya-sthā (N.400)'],rud:['Hara — Śiva as remover'],sw:['Ni — heart-stealing'],cat:'core'},
+  {r:'√kṛ',d:'कृ',g:'Tanādi (VIII)',m:'to do, to make, to act — the primordial action-root',panini:'Ḍukṛn karaṇe (VIII.10)',lal:['Sarvakārī (N.300)'],rud:['Chamakam kriya verbs'],sw:['Sa — doing root'],cat:'core'},
+  {r:'√tap',d:'तप्',g:'Bhvādi (I)',m:'to heat, to practice austerity — Tapas the transforming fire',panini:'Tapa santāpe (1.755)',lal:['Tapas-vinī (N.200)'],rud:['Tapas context in Chamakam'],sw:['Ri — austerity tone'],cat:'yoga'},
+  {r:'√yuj',d:'युज्',g:'Rudhādi (VII)',m:'to join, to yoke, to unite — root of Yoga itself',panini:'Yuja samādhau (VII.7)',lal:['Yoga-rūpā (N.384)'],rud:['Yoga synthesis'],sw:['Ma — union tone'],cat:'yoga'},
+  {r:'√man',d:'मन्',g:'Bhvādi (IV)',m:'to think, to reflect, to consider — root of Manas the mind',panini:'Mana jñāne (1001)',lal:['Manas-priyā (N.420)'],rud:['Manas in Chamakam'],sw:['Ga — mind tone'],cat:'philosophy'},
+  {r:'√budh',d:'बुध्',g:'Bhvādi (I)',m:'to awaken, to know — root of Buddha enlightenment and Bodha awakening',panini:'Budha avagamane (1.614)',lal:['Bodhā (N.738)'],rud:['Jāgrat-bodha in synthesis'],sw:['Dha — awakening'],cat:'philosophy'},
+  {r:'√prī',d:'प्री',g:'Bhvādi (IX)',m:'to please, to love — Prīti love; Priyā the beloved',panini:'Prī prīṇane (IX.22)',lal:['Prīti-rūpā (N.450)'],rud:['Prīti in Chamakam'],sw:['Ma — love tone'],cat:'philosophy'},
+  {r:'√spand',d:'स्पन्द्',g:'Bhvādi (I)',m:'to vibrate, to pulsate — Spanda the cosmic vibration of Kashmir Shaivism',panini:'Spadi kiñcaccelane',lal:['Spanda-rūpā (N.501)'],rud:['Vibrational analysis'],sw:['All — primary vibration'],cat:'philosophy'},
+  {r:'√nṛt',d:'नृत्',g:'Bhvādi (IV)',m:'to dance — Nṛtya the cosmic dance of Śiva-Śakti',panini:'Nṛtī nṛtye (IV.17)',lal:['Nṛtyapriyā (N.365)'],rud:['Cosmic dance synthesis'],sw:['Ri — dance rhythm'],cat:'arts'},
+  {r:'√gā',d:'गा',g:'Bhvādi (I)',m:'to sing — Gāna song; Gāndhāra the singing note',panini:'Gai śabde (1.1013)',lal:['Gānapriyā (N.387)'],rud:['Sāmaveda singing'],sw:['Ga — self-naming sing'],cat:'arts'},
+  {r:'√vad',d:'वद्',g:'Bhvādi (I)',m:'to speak, to declare — Vāda speech; Vadana face; Vedic declaration',panini:'Vada vyaktāyāṃ vāci (1.1065)',lal:['Vadana-smara (N.17)','Vāg-devī (N.188)'],rud:['Vāk speech invocations'],sw:['Pa — speech tone'],cat:'arts'},
+  {r:'√arc',d:'अर्च्',g:'Bhvādi (I)',m:'to worship, to honor — Arcana the ritual offering',panini:'Arca pūjāyām (1.512)',lal:['Arcana-priyā (N.413)'],rud:['Pūjā contexts'],sw:['Sa — worship base'],cat:'ritual'},
+  {r:'√yaj',d:'यज्',g:'Bhvādi (I)',m:'to worship, to sacrifice — Yajña the sacred fire rite',panini:'Yaja deva-pūjā (1.1052)',lal:['Yajña-rūpā (N.396)'],rud:['Yajña throughout Rudram'],sw:['Sa — ritual fire'],cat:'ritual'},
+  {r:'√bhaj',d:'भज्',g:'Bhvādi (I)',m:'to share, to worship, to be devoted — Bhakti devotion',panini:'Bhaja sevāyām (1.604)',lal:['Bhakti-priyā (N.378)'],rud:['Bhakti in synthesis'],sw:['Ga — devotion tone'],cat:'philosophy'},
+  {r:'√kuṇḍ',d:'कुण्ड्',g:'Bhvādi (I)',m:'to burn brightly — Kuṇḍalinī the coiled serpent fire',panini:'Kuṇḍi mandane',lal:['Kuṇḍalinī (N.110)'],rud:['Kuṇḍalinī synthesis'],sw:['Sa — fire earth root'],cat:'yoga'},
+  {r:'√cal',d:'चल्',g:'Bhvādi (I)',m:'to move, to tremble — the trembling of Spanda creation',panini:'Cala kampane (1.548)',lal:['Calad-vīṇā (N.385)'],rud:['Spanda movement'],sw:['Ri — trembling tone'],cat:'grammar'},
+  {r:'√praṇam',d:'प्रणम्',g:'Bhvādi (I)',m:'to bow down, to prostrate — deepest obeisance',panini:'Ṇamu praṇatau (1.586)',lal:['Praṇava (OM) root'],rud:['Namakam prostrations'],sw:['Pa — bowing tone'],cat:'ritual'},
+  {r:'√bhū',d:'भू',g:'Bhvādi (I)',m:'to be, to become — root of Bhava existence and Bhumi earth',panini:'Bhū sattāyām (1.1)',lal:['Bhavānī (N.140)','Bhūmi-rūpā'],rud:['Bhava in N.10 Anuvaka'],sw:['Sa — existence ground'],cat:'core'},
+  {r:'√as',d:'अस्',g:'Adādi (II)',m:'to be, to exist — the verb \'is\' itself; Sat pure existence',panini:'Asa bhuvi (II.60)',lal:['Sat-cit-ānandā (N.362)'],rud:['Asti throughout'],sw:['Sa — being tone'],cat:'core'},
+  {r:'√kṣip',d:'क्षिप्',g:'Bhvādi (VI)',m:'to throw, to project — Kṣepa the cosmic projection of Māyā',panini:'Kṣipa preraṇe (VI.6)',lal:['Māyā-kṣepā (N.520)'],rud:['Kṣiti projection'],sw:['Dha — projection'],cat:'philosophy'},
+  {r:'√ram',d:'रम्',g:'Bhvādi (I)',m:'to delight, to rest in — Rati delight; Rāma the delightful',panini:'Ramu ramane (1.783)',lal:['Ramā (N.500)','Rāgaśaktī'],rud:['Chamakam delight verses'],sw:['Ri — delight tone'],cat:'philosophy'},
+  {r:'√tṛp',d:'तृप्',g:'Bhvādi (IV)',m:'to be satisfied, to be content — Tṛpti fulfillment',panini:'Tṛpu prīṇane (IV.91)',lal:['Tṛptā (N.600)'],rud:['Chamakam satisfaction'],sw:['Ga — contentment'],cat:'yoga'},
+  {r:'√dah',d:'दह्',g:'Bhvādi (I)',m:'to burn — Dāhana the burning; the fire of consciousness',panini:'Daha bhasmī karaṇe (1.518)',lal:['Dahana-śakti names'],rud:['Fire imagery throughout'],sw:['Ri — burning tone'],cat:'core'},
+  {r:'√cal',d:'चल्',g:'Bhvādi (I)',m:'to vibrate, to oscillate — sound wave motion',panini:'Cala kampane',lal:['Vīṇā-calana (N.385)'],rud:['Svara oscillation'],sw:['All — vibration root'],cat:'arts'},
+  {r:'√pā',d:'पा',g:'Bhvādi (II)',m:'to drink, to protect — Pālana nurturing; Pāna the sacred drink',panini:'Pā rakṣaṇe (II.53)',lal:['Pālā (N.530)'],rud:['Amṛta pāna contexts'],sw:['Sa — protective root'],cat:'core'},
+  {r:'√nī',d:'नी',g:'Bhvādi (I)',m:'to lead, to guide — Nīti guidance; Nāyikā the leader',panini:'Ṇī praṇayanane (1.659)',lal:['Nīti-priyā'],rud:['Leading the devotee'],sw:['Pa — guiding tone'],cat:'core'},
+  {r:'√rakṣ',d:'रक्ष्',g:'Bhvādi (I)',m:'to protect, to guard — Rakṣā the protection',panini:'Rakṣa pālane (1.770)',lal:['Rakṣākari (N.399)'],rud:['Rakṣa invocations'],sw:['Pa — protective fifth'],cat:'ritual'},
+  {r:'√jīv',d:'जीव्',g:'Bhvādi (I)',m:'to live, to be alive — Jīva the individual soul',panini:'Jīva prāṇadhāraṇe (1.520)',lal:['Jīva-kale (N.389)'],rud:['Jīvana in Chamakam'],sw:['Ri — life tone'],cat:'philosophy'},
+  {r:'√mṛ',d:'मृ',g:'Bhvādi (VI)',m:'to die — Mṛtyu death; Mahāmṛtyuñjaya conquest of death',panini:'Mṛñ prāṇatyāge (VI.129)',lal:['Mrīḍa context'],rud:['Mahāmṛtyuñjaya N.11'],sw:['Ni — dissolution'],cat:'core'},
+  {r:'√bandh',d:'बन्ध्',g:'Bhvādi (IX)',m:'to bind — Bandha the bond; Mokṣa liberation from bondage',panini:'Bandha bandhane (IX.46)',lal:['Pāśa-bandha (N.8)'],rud:['Bandha in Chamakam'],sw:['Sa — binding root'],cat:'yoga'},
+  {r:'√muc',d:'मुच्',g:'Bhvādi (VI)',m:'to release, to liberate — Mukti and Mokṣa liberation',panini:'Mucu mukti (VI.166)',lal:['Muktidā (N.710)'],rud:['Mukti in synthesis'],sw:['Ni — liberation crown'],cat:'yoga'},
+  {r:'√cint',d:'चिन्त्',g:'Bhvādi (X)',m:'to think deeply, to contemplate — Cintana meditation',panini:'Cita cintāyām (X.54)',lal:['Cintāmaṇi (N.279)'],rud:['Deep contemplation'],sw:['Ri — contemplative'],cat:'yoga'},
+  {r:'√smṛ',d:'स्मृ',g:'Bhvādi (I)',m:'to remember — Smṛti tradition; Smara the remembrance of love',panini:'Smara cintane (1.795)',lal:['Smara (N.17)','Smaraṇa-priyā'],rud:['Vedic memory'],sw:['Ga — remembrance'],cat:'grammar'},
+  {r:'√śru',d:'श्रु',g:'Bhvādi (V)',m:'to hear — Śruti the heard Vedas; Śravaṇa listening',panini:'Śru śravaṇe (V.27)',lal:['Śruti-rūpā'],rud:['Vedic hearing tradition'],sw:['Pa — hearing tone'],cat:'core'},
+  {r:'√drś',d:'दृश्',g:'Bhvādi (I)',m:'to see — Darśana vision; Dṛṣṭi the eye of wisdom',panini:'Dṛśī prekṣaṇe (1.1033)',lal:['Darśanā (N.620)'],rud:['Darśana synthesis'],sw:['Dha — vision tone'],cat:'core'},
+  {r:'√sparś',d:'स्पर्श्',g:'Bhvādi (I)',m:'to touch — Sparśa touch; the tanmātra sensation',panini:'Sparśa (nominal)',lal:['Sparśa-śakti (N.11 arrow)'],rud:['Five tanmātras'],sw:['All — touch sensation'],cat:'philosophy'},
+  {r:'√ras',d:'रस्',g:'Bhvādi (I)',m:'to taste — Rasa the aesthetic flavor; Rasayana rejuvenation',panini:'Rasa āsvādane',lal:['Rasa-priyā'],rud:['Rasa in Chamakam'],sw:['All — rasa basis'],cat:'arts'},
+  {r:'√ghrā',d:'घ्रा',g:'Bhvādi (II)',m:'to smell — Gandha fragrance; the Mūlādhāra tanmātra',panini:'Ghrāñ abhighāre (II)',lal:['Gandha-priyā'],rud:['Gandha tanmātra'],sw:['Sa — Mūlādhāra'],cat:'philosophy'},
+  {r:'√vah',d:'वह्',g:'Bhvādi (I)',m:'to carry, to flow — Vāhana vehicle; Vāha the river current',panini:'Vaha prāpane (1.1068)',lal:['Vahana-priyā'],rud:['Vāyu vehicle'],sw:['Ri — flow tone'],cat:'grammar'},
+  {r:'√svap',d:'स्वप्',g:'Bhvādi (II)',m:'to sleep, to dream — Svapna dream state; Jāgrat-svapna',panini:'Ṣvapa śayanane (II.64)',lal:['Turīya-rūpā (N.762)'],rud:['States of consciousness'],sw:['Ni — dream tone'],cat:'philosophy'},
+  {r:'√jagṛ',d:'जागृ',g:'Adādi (II)',m:'to be awake — Jāgrat the waking state; Jāgṛtī watchfulness',panini:'Jāgṛ nidre (II.67)',lal:['Jāgratī (N.534)'],rud:['Waking state synthesis'],sw:['Sa — waking'],cat:'philosophy'},
+  {r:'√śī',d:'शी',g:'Adādi (II)',m:'to lie, to rest — Śayana rest; Śeṣa-śayana Viṣṇu resting on Ananta',panini:'Śīṅ svapne (II.26)',lal:['Śayana-priyā'],rud:['Rest and liberation'],sw:['Ga — rest tone'],cat:'philosophy'},
+  {r:'√tan',d:'तन्',g:'Tanādi (VIII)',m:'to spread, to extend — Tantra the loom; Tanu body',panini:'Tanu vistāre (VIII.1)',lal:['Tantra-rūpā','Tanubhuvā'],rud:['Tantric interpretation'],sw:['All — extension'],cat:'core'},
+  {r:'√sev',d:'सेव्',g:'Bhvādi (I)',m:'to serve, to resort to — Sevā devotional service',panini:'Ṣeva sevāyām (1.937)',lal:['Sevā-priyā'],rud:['Sevā throughout'],sw:['Pa — service tone'],cat:'ritual'},
+  {r:'√naś',d:'नश्',g:'Bhvādi (IV)',m:'to perish — Nāśana destruction; Naśyat dissolution',panini:'Naśa adane (IV.74)',lal:['Nāśa-kari (N.399)'],rud:['Dissolution anuvakas'],sw:['Ni — dissolution'],cat:'grammar'},
+  {r:'√labh',d:'लभ्',g:'Bhvādi (I)',m:'to obtain, to gain — Lābha attainment; Labdha what is gained',panini:'Ḍu labha prāptau (1.621)',lal:['Labdha-rūpā'],rud:['Chamakam — labh root'],sw:['Ri — attainment'],cat:'grammar'},
+  {r:'√vṛ',d:'वृ',g:'Bhvādi (I)',m:'to choose, to cover — Varaṇa choosing; Vara boon',panini:'Vṛṅ saṃbhaktau (1.804)',lal:['Varadā (N.559)','Vara-priyā'],rud:['Boon-granting'],sw:['Ga — choosing tone'],cat:'ritual'},
+  {r:'√sic',d:'सिच्',g:'Bhvādi (VI)',m:'to sprinkle, to pour — Abhiṣeka the sacred bath',panini:'Ṣica kṣaraṇe (VI.155)',lal:['Abhiṣeka context'],rud:['Abhiṣeka ritual'],sw:['Ri — water sprinkling'],cat:'ritual'},
+  {r:'√kamp',d:'कम्प्',g:'Bhvādi (I)',m:'to shake, to tremble — Kampana vibration; Spanda trembling',panini:'Kampa kampane (1.542)',lal:['Spanda-śaktī'],rud:['Svara kampana tremolo'],sw:['All — trembling root'],cat:'arts'},
+  {r:'√nand',d:'नन्द्',g:'Bhvādi (I)',m:'to rejoice, to be happy — Ānanda bliss; Nandana delight',panini:'Nadi samṛddhau (1.570)',lal:['Nandā (N.556)','Ānanda-rūpā'],rud:['Chamakam joy verses'],sw:['Ni — bliss crown'],cat:'philosophy'},
+  {r:'√tul',d:'तुल्',g:'Bhvādi (X)',m:'to weigh, to balance — Tulya equal; Tulā the scale',panini:'Tula māne (X.123)',lal:['Tula-rūpā'],rud:['Balance synthesis'],sw:['Ma — balance tone'],cat:'grammar'},
+  {r:'√har',d:'हर्',g:'Bhvādi (I)',m:'to take, to steal the heart — Hara Śiva; Haraṇa removal of suffering',panini:'Hṛ haraṇe (1.1046)',lal:['Hara-priyā','Śiva-Hara'],rud:['Hara-Śiva N.10'],sw:['Ni — Śiva hara'],cat:'core'},
+  {r:'√kṣar',d:'क्षर्',g:'Bhvādi (I)',m:'to flow, to melt away — Kṣara the perishable world',panini:'Kṣara saṃcalane (1.559)',lal:['Kṣara-akṣara (N.714)'],rud:['Kṣara in Chamakam'],sw:['Ri — flowing'],cat:'philosophy'},
+  {r:'√pakṣ',d:'पक्ष्',g:'Bhvādi (I)',m:'to side with, to have wing — Pakṣa aspect, wing, fortnight',panini:'Pakṣa (nominal)',lal:['Pakṣa-priyā'],rud:['Pakṣa fortnight'],sw:['Dha — aspect tone'],cat:'grammar'},
+  {r:'√car',d:'चर्',g:'Bhvādi (I)',m:'to move, to practice — Ācāra conduct; Cara moving being',panini:'Cara gatibhakṣaṇayoḥ (1.646)',lal:['Ācāra-priyā'],rud:['Conduct in Chamakam'],sw:['Ri — moving tone'],cat:'grammar'},
+  {r:'√pṛ',d:'पृ',g:'Bhvādi (III)',m:'to fill, to satisfy — Pūraṇa fulfilling; Pṛthvī the wide earth',panini:'Pṛñ pālanapūraṇayoḥ',lal:['Pṛthivī (N.11 tanmātra)'],rud:['Pṛthvī in Chamakam'],sw:['Sa — earth filling'],cat:'core'},
+  {r:'√mrd',d:'मृड्',g:'Bhvādi (VI)',m:'to be gracious, to be kind — Mṛḍa Śiva the gracious',panini:'Mṛḍa sukhe (VI.145)',lal:['Mṛḍā-priyā'],rud:['Mṛḍa — Rudra kind aspect N.1'],sw:['Ga — grace tone'],cat:'core'},
+  {r:'√car',d:'चर्',g:'Bhvādi (I)',m:'to wander, to practice — Cāraṇa wandering; Sādhana practice',panini:'Cara (secondary)',lal:['Sādhana-priyā'],rud:['Cāraṇa synthesis'],sw:['Pa — practice tone'],cat:'yoga'},
+  {r:'√tvar',d:'त्वर्',g:'Bhvādi (I)',m:'to hurry, to be quick — Tvaritā swift; Tvarita quick form of Durgā',panini:'Tvara śīghre (1.806)',lal:['Tvaritā (N.421)'],rud:['Tvarita in Chamakam'],sw:['Ri — quick tone'],cat:'grammar'},
+  {r:'√diś',d:'दिश्',g:'Bhvādi (VI)',m:'to point, to direct — Diś direction; Dik space',panini:'Diśī ādāne (VI.2)',lal:['Diśā (N.400)'],rud:['Dik in Chamakam'],sw:['All — direction'],cat:'grammar'},
+  {r:'√svr',d:'स्वर्',g:'Nominal',m:'to sound, to resonate — Svara the musical note; Svar heaven',panini:'Svara (nominal derivation)',lal:['Svara-priyā (N.387)'],rud:['Svara Sthāna section'],sw:['All — naming all swaras'],cat:'arts'},
+  {r:'√mad',d:'मद्',g:'Bhvādi (I)',m:'to be intoxicated with joy — Mada the divine intoxication',panini:'Mada harṣe (1.558)',lal:['Madanā (N.306)'],rud:['Mada in Chamakam'],sw:['Ri — joyful tone'],cat:'philosophy'},
+  {r:'√stan',d:'स्तन्',g:'Bhvādi (IV)',m:'to resound, to thunder — Stanita thunder; Stana the breast',panini:'Stana śabde (IV)',lal:['Stana-bhāra (N.36)'],rud:['Thunderous Rudra'],sw:['Ga — thunder resonance'],cat:'grammar'},
+  {r:'√phal',d:'फल्',g:'Bhvādi (I)',m:'to bear fruit — Phala the result; Phalini the fruit-bearing goddess',panini:'Phala niṣpattau (1.719)',lal:['Phalā (N.710)'],rud:['Chamakam fruit granting'],sw:['Ma — fruition tone'],cat:'grammar'},
+  {r:'√kṛṣ',d:'कृष्',g:'Bhvādi (I)',m:'to pull, to attract — Kṛṣṇa the attractive one; Kṛṣi agriculture',panini:'Kṛṣa vilekhane (1.549)',lal:['Kṛṣṇā (N.450)'],rud:['Karṣaṇa pulling'],sw:['Sa — attraction root'],cat:'core'},
+  {r:'√jap',d:'जप्',g:'Bhvādi (I)',m:'to mutter, to recite — Japa the repetition of the divine name',panini:'Japa manasā ucce (1.522)',lal:['Japa-priyā (N.413)'],rud:['Japa of Rudram'],sw:['All — mantra repetition'],cat:'ritual'},
+  {r:'√dhyā',d:'ध्या',g:'Bhvādi (I)',m:'to meditate, to contemplate — Dhyāna deep meditation',panini:'Dhyai cintāyām (1.524)',lal:['Dhyāna-gamyā (N.725)'],rud:['Dhyāna synthesis'],sw:['Ni — meditative crown'],cat:'yoga'},
+  {r:'√prāṇ',d:'प्राण्',g:'Nominal/√an',m:'√an to breathe; Prāṇa the vital breath; Apāna downward breath',panini:'Aṇa prāṇane (II.3)',lal:['Prāṇa-rūpā'],rud:['Prāṇa in Chamakam'],sw:['Pa — vital breath fifth'],cat:'yoga'},
+  {r:'√kram',d:'क्रम्',g:'Bhvādi (I)',m:'to step progressively — Kramamā step by step liberation',panini:'Kramu padavikṣepe (1.553)',lal:['Krama-arcana'],rud:['Progressive Chamakam'],sw:['Ga — step tone'],cat:'grammar'},
+  {r:'√svar',d:'स्वर्',g:'Nominal',m:'resonance of the self — Svarūpa one\'s own form; Svara tone',panini:'Sva own + rā to give',lal:['Svarūpā (N.500)'],rud:['Svara Sthāna'],sw:['All — self-resonance'],cat:'arts'},
+  {r:'√bhrāj',d:'भ्राज्',g:'Bhvādi (I)',m:'to shine, to illuminate — Bhrājanī the shining one',panini:'Bhrāja dīptau (1.593)',lal:['Bhrājā (N.600)'],rud:['Dīpti in synthesis'],sw:['Dha — shining brow'],cat:'core'},
+  {r:'√pur',d:'पुर्',g:'Bhvādi (VI)',m:'to fill, to complete — Pūrṇa fullness; Puraṃdara city-storm',panini:'Pura āgāma',lal:['Pūrṇā (N.860)'],rud:['Chamakam fullness'],sw:['Ni — fullness crown'],cat:'philosophy'},
+  {r:'√hū',d:'हू',g:'Juhotyādi (III)',m:'to call, to invoke — Hūti the invocation; Āhvāna calling the divine',panini:'Hve spardhe śabde ca (III.35)',lal:['Hūti contexts'],rud:['Homa fire invocation'],sw:['Sa — invocation root'],cat:'ritual'},
+  {r:'√iṣ',d:'इष्',g:'Bhvādi (VI)',m:'to desire, to seek — Iṣṭa the desired; Iṣṭā deity',panini:'Iṣu icchāyām (VI.78)',lal:['Iṣṭā (N.442)'],rud:['Iṣu — Rudra\'s arrows N.1'],sw:['Ri — desire arrow'],cat:'core'},
+  {r:'√tap',d:'तप्',g:'Bhvādi (I)',m:'to shine, to burn — Tapana the sun; Tapta heated by austerity',panini:'Tapa santāpe (1.755)',lal:['Tapas contexts'],rud:['Tapas in Chamakam'],sw:['Ga — sun burning'],cat:'yoga'},
+  {r:'√sṛ',d:'सृ',g:'Bhvādi (I)',m:'to flow, to go — Sṛṣṭi creation flowing outward; Sara the mobile',panini:'Sṛ gatau (1.1055)',lal:['Sṛṣṭi-kartṛī (N.320)'],rud:['Cosmic flow'],sw:['Ri — creative flow'],cat:'core'},
+  {r:'√kḷp',d:'कॢप्',g:'Bhvādi (I)',m:'to be fit, to arrange — Kalpa the cosmic cycle; Kalpanā imagination',panini:'Kḷpa sampadyamāne (1.568)',lal:['Kalpitā (N.501)'],rud:['Kalpa in Chamakam'],sw:['Dha — ordering tone'],cat:'grammar'},
+  {r:'√pac',d:'पच्',g:'Bhvādi (I)',m:'to cook, to ripen — Pakva ripened; Pācana digestion',panini:'Ḍu pacaṣ pāke (1.1098)',lal:['Pācana-śakti'],rud:['Digestion metaphors'],sw:['Ri — ripening'],cat:'grammar'},
+  {r:'√bhram',d:'भ्रम्',g:'Bhvādi (I)',m:'to wander, to be confused — Bhrama confusion; Bhrāmaṇī the wandering goddess',panini:'Bhrama paryaṭane (1.611)',lal:['Bhrāmaṇī'],rud:['Wandering Rudra'],sw:['Ga — wandering tone'],cat:'grammar'},
+  {r:'√sad',d:'सद्',g:'Bhvādi (I)',m:'to sit, to be — Sad existence; Sattā existence-plenitude',panini:'Ṣad avasāda (1.990)',lal:['Sat-rūpā','Sadā-śivā'],rud:['Sat existence'],sw:['Sa — sitting ground'],cat:'philosophy'},
+  {r:'√muñc',d:'मुञ्च्',g:'Bhvādi (VI)',m:'to release — root synonym of √muc; Vimuñca release',panini:'Muñc mokṣaṇe (VI.163)',lal:['Liberation names'],rud:['Mukti synthesis'],sw:['Ni — release crown'],cat:'yoga'},
+  {r:'√tṛ',d:'तृ',g:'Bhvādi (I)',m:'to cross over — Tāraṇa crossing the ocean; Tārā who saves',panini:'Tṛ pālana-tāraṇayoḥ (1.1005)',lal:['Tārā (N.102)'],rud:['Tāraṇa in synthesis'],sw:['Tara octave — crossing'],cat:'core'},
+];
+
+// ═══════════════════════════════════════════════════════
+//  PANE NAVIGATION
+// ═══════════════════════════════════════════════════════
+let activePane = 'aksharas';
+let selectedAk = null;
+let selectedDhatu = null;
+const tabs = document.querySelectorAll('.skt-tab');
+
+function showPane(id) {
+  document.querySelectorAll('.skt-pane').forEach(p => p.classList.remove('active'));
+  document.getElementById(`pane-${id}`)?.classList.add('active');
+  tabs.forEach((t,i) => t.classList.toggle('active', ['aksharas','dhatu','inference'][i]===id));
+  activePane = id;
+  if(id==='dhatu') initDhatu();
+  if(id==='inference') updateKeyUI();
+}
+
+function showPaneDhatu(sub) {
+  showPane('dhatu');
+  if(sub==='gaṇa') setTimeout(()=>setDhatuFilter(null,'gaṇa'),100);
+  if(sub==='portal') setTimeout(()=>{ document.getElementById('dhatuSearch').value=''; filterDhatu(); },100);
+}
+
+function setSbActive(el) {
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════════
+//  TOOL 1 — AKSHARAS
+// ═══════════════════════════════════════════════════════
+const SWARA_COLORS = {Sa:'#C44A2A',Ri:'#D4862A',Ga:'#8BAA28',Ma:'#2A9A6A',Pa:'#2A7AC4',Dha:'#6A4AC4',Ni:'#C42A7A','All swaras':'#888'};
+const CHAKRA_COLORS = {'Mūlādhāra':'#c44','Svādhiṣṭhāna':'#c74','Maṇipūra':'#cc4','Anāhata':'#4c8','Viśuddha':'#48c','Ājñā':'#86d','Sahasrāra':'#d8f','All chakras':'#888'};
+
+function buildAksharaGrid() {
+  const grid = document.getElementById('aksharaGrid');
+  grid.innerHTML = AKSHARAS.map((a,i) => {
+    const swColor = SWARA_COLORS[a.swara]||'#888';
+    const ckColor = CHAKRA_COLORS[a.chakra]||'#888';
+    return `<div class="ak-card" id="ak-${i}"
+      data-type="${a.type}" data-sthana="sthana-${a.sthana.toLowerCase().split('-')[0]}"
+      onclick="selectAkshara(${i})">
+      <div class="ak-deva" style="color:${swColor}">${a.l}</div>
+      <div class="ak-iast">${a.i}</div>
+      <div class="ak-sthana">${a.sthana}</div>
+      <div class="ak-deity" style="font-size:0.52rem;">${a.deity}</div>
+      <div style="margin-top:4px;display:flex;gap:3px;justify-content:center;flex-wrap:wrap;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:0.32rem;background:${swColor}22;border:1px solid ${swColor}44;color:${swColor};padding:1px 4px;border-radius:2px;">${a.swara}</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:0.32rem;background:${ckColor}22;border:1px solid ${ckColor}44;color:${ckColor};padding:1px 4px;border-radius:2px;">${a.chakra.split('-')[0]}</span>
+      </div>
+    </div>`;
+  }).join('');
+  updateStats();
+}
+
+function filterAk(type, btn) {
+  document.querySelectorAll('.ak-filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.ak-card').forEach(el => {
+    if(type==='all') el.classList.remove('hidden');
+    else if(type==='vowels') el.classList.toggle('hidden', el.dataset.type!=='vowel');
+    else if(type==='consonants') el.classList.toggle('hidden', el.dataset.type!=='consonant'&&el.dataset.type!=='semivowel'&&el.dataset.type!=='sibilant'&&el.dataset.type!=='aspirate');
+    else el.classList.toggle('hidden', !el.dataset.sthana.includes(type));
+  });
+}
+
+function selectAkshara(i) {
+  const a = AKSHARAS[i];
+  document.querySelectorAll('.ak-card').forEach(c=>c.classList.remove('selected'));
+  document.getElementById(`ak-${i}`)?.classList.add('selected');
+  selectedAk = i;
+  const swColor = SWARA_COLORS[a.swara]||'#888';
+  const ckColor = CHAKRA_COLORS[a.chakra]||'#888';
+  const detail = document.getElementById('akDetail');
+  detail.className = 'ak-detail show';
+  detail.innerHTML = `
+    <div class="ak-detail-header">
+      <div class="ak-detail-deva" style="color:${swColor}">${a.l}</div>
+      <div class="ak-detail-meta">
+        <div class="ak-detail-iast">${a.i} — ${a.sthana}</div>
+        <div style="font-style:italic;color:var(--cream3);font-size:0.86rem;margin-top:3px;">${a.nada}</div>
+      </div>
+    </div>
+    <div class="ak-detail-grid">
+      <div class="ak-detail-card">
+        <div class="ak-detail-card-label">Sthāna (Articulation)</div>
+        <div class="ak-detail-card-val">${a.sthana}</div>
+      </div>
+      <div class="ak-detail-card">
+        <div class="ak-detail-card-label">Presiding Deity</div>
+        <div class="ak-detail-card-val" style="color:var(--rose2)">${a.deity}</div>
+      </div>
+      <div class="ak-detail-card">
+        <div class="ak-detail-card-label">Chakra Seat</div>
+        <div class="ak-detail-card-val" style="color:${ckColor}">${a.chakra}</div>
+      </div>
+      <div class="ak-detail-card">
+        <div class="ak-detail-card-label">Swara Correspondence</div>
+        <div class="ak-detail-card-val"><span class="swara-bar" style="color:${swColor};border-color:${swColor}44;background:${swColor}11;">${a.swara}</span></div>
+      </div>
+      <div class="ak-detail-card">
+        <div class="ak-detail-card-label">Rasa</div>
+        <div class="ak-detail-card-val">${a.rasa}</div>
+      </div>
+      <div class="ak-detail-card">
+        <div class="ak-detail-card-label">Dosha Balance</div>
+        <div class="ak-detail-card-val">${a.dosha}</div>
+      </div>
+    </div>
+    <div class="ak-crosslinks" style="margin-top:14px;">
+      <div class="ak-crosslinks-title">🌺 Lalitā Sahasranāma Cross-Links</div>
+      <div class="ak-crosslink-items">${(a.lalita||[]).map(x=>`<span class="xlink" onclick="alert('Opening: ${x}')">${x}</span>`).join('')}</div>
+    </div>
+    <div class="ak-crosslinks" style="margin-top:8px;">
+      <div class="ak-crosslinks-title">🕉 Sri Rudram Cross-Links</div>
+      <div class="ak-crosslink-items">${(a.rudram||[]).map(x=>`<span class="xlink">${x}</span>`).join('')}</div>
+    </div>
+    <div class="ak-crosslinks" style="margin-top:8px;">
+      <div class="ak-crosslinks-title">🎵 Swara Cross-Link</div>
+      <div class="ak-crosslink-items"><span class="xlink" style="color:${swColor};border-color:${swColor}44;">${a.swara_link}</span></div>
+    </div>
+    <button class="dim-gen-btn" style="margin-top:14px;font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.8px;background:none;border:1px solid rgba(180,104,212,0.4);border-radius:3px;color:var(--violet2);cursor:pointer;padding:5px 14px;transition:all 0.2s;" onclick="generateAksharaDeep(${i})" ${!apiKey?'disabled title="Add API key for deep commentary"':''}>
+      ${apiKey?'✦ Generate deep scholarly commentary (Sthāna · Nāda · Neuroscience)':'⚷ Add API key for deep commentary'}
+    </button>
+    <div id="akDeepOut" class="dhatu-ai-out" style="margin-top:10px;"></div>`;
+  detail.scrollIntoView({behavior:'smooth',block:'nearest'});
+  log('ok', `Akshara selected: ${a.l} (${a.i}) — ${a.sthana}`);
+}
+
+async function generateAksharaDeep(i) {
+  const a = AKSHARAS[i];
+  const out = document.getElementById('akDeepOut');
+  if(!out||!apiKey) return;
+  out.innerHTML='<div class="inf-loading"><span class="spin"></span>Generating deep analysis…</div>';
+  log('ai',`Generating akshara deep: ${a.l} (${a.i})…`);
+  const prompt = `You are a supreme Sanskrit phonetics and Vedic science scholar. Write exactly 4 scholarly paragraphs (no bullet points, minimum 5 lines each) on the akshara (phoneme) "${a.i}" (Devanāgarī: ${a.l}) of Sanskrit.
+
+Paragraph 1 — Articulatory Science (Sthāna-Karaṇa): The precise articulatory position ${a.sthana}, the tongue-palate-lip geometry, Pāṇini's description in Śikṣā texts, and the physics of how this phoneme shapes the oral resonance chamber.
+
+Paragraph 2 — Nāda & Vedic Science: The nāda quality ("${a.nada}"), how Vedic reciters use this phoneme in Udātta/Anudātta/Svarita svara contexts in Sri Rudram and Sapta Swaras, its appearance in the sacred syllable OM.
+
+Paragraph 3 — Chakra-Deity-Swara Resonance: Why ${a.chakra} is this phoneme's chakra seat, the connection to deity ${a.deity}, the swara correspondence ${a.swara}, and Tantric Nyāsa placement.
+
+Paragraph 4 — Neuroscience: What happens in the vagus nerve, brainstem, and default mode network when this phoneme is repeatedly chanted. Reference cortisol, heart rate variability, and any clinical research on this specific articulatory position. Cross-link to culturalmusings.com portals.
+
+Use IAST throughout. No bullet points. Scholarly prose only.`;
+  try {
+    const txt = await callAI(prompt, 1400);
+    out.innerHTML = renderMd(txt);
+    log('ok', `✓ Akshara deep: ${a.i}`);
+  } catch(err) {
+    out.innerHTML = `<div style="color:var(--red-err);font-size:0.82rem;">${esc(err.message)}</div>`;
+    log('err', err.message);
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  TOOL 2 — DHĀTU EXPLORER
+// ═══════════════════════════════════════════════════════
+let dhatuFilter = 'all';
+let dhatuInitialized = false;
+
+function initDhatu() {
+  if(dhatuInitialized) { updateKeyUI(); return; }
+  dhatuInitialized = true;
+  buildGanaFilters();
+  buildDhatuGrid();
+  updateStats();
+  updateKeyUI();
+}
+
+function buildGanaFilters() {
+  const categories = ['all',...new Set(DHATUS.map(d=>d.cat))];
+  const labels = {all:'All Roots',core:'Core Cosmic',philosophy:'Philosophy',grammar:'Grammar',yoga:'Yoga',arts:'Arts & Music',ritual:'Ritual',none:'Other'};
+  document.getElementById('ganaFilters').innerHTML = categories.map(c=>
+    `<button class="dhatu-cat-btn${c==='all'?' active':''}" onclick="setDhatuFilter(this,'${c}')">${labels[c]||c}</button>`
+  ).join('');
+}
+
+function setDhatuFilter(btn, cat) {
+  dhatuFilter = cat;
+  document.querySelectorAll('.dhatu-cat-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  else document.querySelectorAll('.dhatu-cat-btn').forEach(b=>{if(b.textContent.toLowerCase().includes(cat))b.classList.add('active');});
+  filterDhatu();
+}
+
+function filterDhatu() {
+  const q = (document.getElementById('dhatuSearch')?.value||'').toLowerCase();
+  document.querySelectorAll('.dhatu-card').forEach((el,i) => {
+    const d = DHATUS[i];
+    const matchQ = !q || d.r.toLowerCase().includes(q) || d.m.toLowerCase().includes(q) ||
+      [...(d.lal||[]),...(d.rud||[]),...(d.sw||[])].some(s=>s.toLowerCase().includes(q));
+    const matchCat = dhatuFilter==='all' || d.cat===dhatuFilter;
+    el.classList.toggle('hidden', !(matchQ && matchCat));
+  });
+}
+
+function buildDhatuGrid() {
+  const grid = document.getElementById('dhatuGrid');
+  grid.innerHTML = DHATUS.map((d,i) => `
+    <div class="dhatu-card" id="dh-${i}" onclick="selectDhatu(${i})">
+      <div class="dhatu-deva">${d.d}</div>
+      <div class="dhatu-root">${d.r}</div>
+      <div class="dhatu-meaning">${d.m}</div>
+      <div class="dhatu-gaṇa">${d.g} · Pāṇini: ${d.panini.slice(0,40)}…</div>
+      <div class="dhatu-tags">
+        ${(d.lal||[]).length?`<span class="dhatu-tag lalita">🌺 ${(d.lal||[]).length} Lalitā</span>`:''}
+        ${(d.rud||[]).length?`<span class="dhatu-tag rudram">🕉 ${(d.rud||[]).length} Rudram</span>`:''}
+        ${(d.sw||[]).length?`<span class="dhatu-tag swara">🎵 ${(d.sw||[]).length} Swara</span>`:''}
+      </div>
+    </div>`).join('');
+}
+
+function selectDhatu(i) {
+  const d = DHATUS[i];
+  document.querySelectorAll('.dhatu-card').forEach(c=>c.style.borderColor='');
+  document.getElementById(`dh-${i}`).style.borderColor = 'rgba(197,160,89,0.5)';
+  selectedDhatu = i;
+  const detail = document.getElementById('dhatuDetail');
+  detail.className = 'dhatu-detail show';
+  detail.innerHTML = `
+    <div class="dhatu-detail-header">
+      <div>
+        <div class="dhatu-detail-deva-big">${d.d}</div>
+        <div class="dhatu-detail-big">${d.r}</div>
+        <div style="font-style:italic;color:var(--cream3);margin-top:3px;">${d.g}</div>
+      </div>
+      <div style="flex:1;">
+        <div style="font-size:0.88rem;color:var(--cream2);line-height:1.75;">${d.m}</div>
+      </div>
+    </div>
+    <div class="dhatu-derivation">
+      <p><strong>Pāṇini Reference:</strong> <em>${d.panini}</em></p>
+      <p>The root ${d.r} belongs to the ${d.g} conjugation class. Its primary meaning establishes ${d.m.toLowerCase()} — a concept that pervades Vedic cosmology and the Śrī Vidyā tradition. Through the process of upasarga (prefix) attachment and kṛt-suffix derivation, this single root generates dozens of sacred names across all three CulturalMusings portals.</p>
+    </div>
+    <div class="dhatu-occurrences">
+      <div class="occ-section-title">PORTAL CROSS-LINKS</div>
+      <div class="occ-grid">
+        ${(d.lal||[]).length?`<div class="occ-card"><div class="occ-portal l">🌺 Lalitā Sahasranāma</div><div class="occ-names">${d.lal.join(' · ')}</div></div>`:''}
+        ${(d.rud||[]).length?`<div class="occ-card"><div class="occ-portal r">🕉 Sri Rudram</div><div class="occ-names">${d.rud.join(' · ')}</div></div>`:''}
+        ${(d.sw||[]).length?`<div class="occ-card"><div class="occ-portal s">🎵 Sapta Swaras</div><div class="occ-names">${d.sw.join(' · ')}</div></div>`:''}
+      </div>
+    </div>
+    <button class="dhatu-ai-btn" onclick="generateDhatuCommentary(${i})" ${!apiKey?'disabled title="Add API key"':''}>
+      ${apiKey?'✦ Generate deep scholarly commentary (5 paragraphs)':'⚷ Add API key for deep commentary'}
+    </button>
+    <div id="dhatuAiOut" class="dhatu-ai-out"></div>`;
+  detail.scrollIntoView({behavior:'smooth',block:'nearest'});
+  log('ok', `Dhātu selected: ${d.r} — ${d.m.slice(0,50)}`);
+}
+
+async function generateDhatuCommentary(i) {
+  const d = DHATUS[i];
+  const out = document.getElementById('dhatuAiOut');
+  const btn = detail?.querySelector('.dhatu-ai-btn');
+  if(!out||!apiKey) return;
+  out.innerHTML='<div class="inf-loading"><span class="spin"></span>Generating via AI…</div>';
+  if(btn){btn.disabled=true;btn.textContent='⟳ Generating…';}
+  log('ai',`Generating dhātu commentary: ${d.r}…`);
+  const prompt = `You are a supreme Sanskrit scholar specializing in Vedic grammar, Tantric philosophy, and modern neuroscience. Write exactly 5 scholarly paragraphs (no bullets, minimum 6 lines each) on the Sanskrit verbal root ${d.r} (${d.d}, ${d.g}).
+
+Paragraph 1 — Sanskrit & Pāṇinian Analysis: The Dhātupāṭha entry "${d.panini}", the full range of meanings, upasarga prefixes that modify it, kṛt and taddhita suffixes derived from it, and its morphological family.
+
+Paragraph 2 — Vedic & Upanishadic Presence: Where this root appears in the Rigveda, Taittirīya Saṃhitā (Sri Rudram's source text), Upanishads, and how the Bhāṣya commentators Śaṅkara and Bhāskararāya interpret it in sacred name contexts.
+
+Paragraph 3 — Cross-Portal Living Links: How this root generates the names ${d.lal?.join(', ')||'(Lalitā names)'} in the Lalitā Sahasranāma, its presence in Sri Rudram verses (${d.rud?.join(', ')||'Rudram contexts'}), and its resonance in the Sapta Swara system (${d.sw?.join(', ')||'swara contexts'}).
+
+Paragraph 4 — Yoga, Tantra & Kashmir Shaivism: How this root's meaning functions in the Spanda tradition, the Pratyabhijñā-hṛdayam, and Yoga Sūtras. What sādhana practice this root's energy supports.
+
+Paragraph 5 — Neuroscience & Nāda: The articulatory position of this root's initial phoneme, its vagal nerve pathway, brainwave effect when chanted as part of a mantra, and how the Cultural Musings portals at culturalmusings.com connect this root to Nāda Chikitsā and consciousness science.
+
+Use IAST throughout. No bullet points. Scholarly prose.`;
+  try {
+    const txt = await callAI(prompt, 1800);
+    out.innerHTML = renderMd(txt);
+    if(btn){btn.disabled=false;btn.textContent='↺ Re-generate';}
+    log('ok', `✓ Dhātu commentary: ${d.r}`);
+  } catch(err) {
+    out.innerHTML = `<div style="color:var(--red-err);font-size:0.82rem;">${esc(err.message)}</div>`;
+    if(btn){btn.disabled=false;btn.textContent='↺ Retry';}
+    log('err', err.message);
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  TOOL 3 — LIVE INFERENCE ENGINE
+// ═══════════════════════════════════════════════════════
+async function runInference() {
+  const word = document.getElementById('infWordInp')?.value.trim();
+  if(!word) { log('err','Enter a Sanskrit word to analyse.'); return; }
+  const out = document.getElementById('infResults');
+  const btn = document.getElementById('infBtn');
+  if(!apiKey) {
+    out.innerHTML = `
+      <div class="inf-no-key">
+        <span class="inf-no-key-icon">⚷</span>
+        <div>
+          <strong>API key required</strong> for live inference.<br/>
+          Paste a free key above — <strong style="color:var(--green-ok)">Groq</strong> (console.groq.com), 
+          <strong style="color:#4285f4">Gemini</strong> (aistudio.google.com), or 
+          <strong style="color:var(--violet2)">OpenRouter</strong> (openrouter.ai).<br/>
+          <span style="font-size:0.78rem;">Keys are locked immediately on paste and never visible again — only token usage is shown.</span>
+        </div>
+      </div>`;
+    return;
+  }
+  if(btn){btn.disabled=true;btn.innerHTML='<span class="spin"></span>Analysing…';}
+  out.innerHTML='<div class="inf-loading"><span class="spin"></span>Running Pāṇinian inference on <em>' + esc(word) + '</em>…</div>';
+  log('ai', `Inference: "${word}"…`);
+
+  // Build cross-links from our data
+  const matchingAk = AKSHARAS.filter(a => word.toLowerCase().includes(a.i.toLowerCase()) || a.lalita?.some(l=>l.includes(word)));
+  const matchingDh = DHATUS.filter(d => d.lal?.some(l=>l.includes(word)) || d.rud?.some(r=>r.includes(word)) || word.toLowerCase().includes(d.r.replace('√','').toLowerCase().slice(0,3)));
+
+  const prompt = `You are the world's foremost Sanskrit scholar. Analyse the word "${word}" with maximum scholarly depth. Return your analysis in EXACTLY this structured format — each section separated by ### headers:
+
+### DHĀTU DERIVATION
+Identify the verbal root (dhātu) using IAST, give the Pāṇinian Dhātupāṭha reference, the gaṇa class, primary and secondary meanings, and one Upanishadic citation. 3-4 sentences.
+
+### PĀṆINIAN PARSE TABLE
+Provide a table with these rows (format as: Term | Value):
+Root | [IAST dhātu]
+Pāṇini Sūtra | [sūtra number and text]
+Suffix Applied | [kṛt or taddhita suffix]
+Compound Type | [if applicable]
+Sandhi Rule | [if applicable]
+Word Class | [noun/verb/adj/indeclinable]
+Gender & Case | [if noun]
+
+### CHAKRA & STHĀNA
+Identify: (1) primary articulatory Sthāna of the opening phoneme with vagal nerve pathway; (2) chakra seat with color and frequency; (3) Tantric Nyāsa placement; (4) nāda quality — mantra, śabda, or dhvani. 3-4 sentences.
+
+### CROSS-PORTAL LINKS
+List matching names in: (1) Lalitā Sahasranāma — cite name numbers if known; (2) Sri Rudram — cite anuvaka; (3) Sapta Swaras — cite swara and octave. Also name the most relevant culturalmusings.com sub-site. 3-4 sentences.
+
+### RASA & DOSHA
+State: (1) which of the 9 rasas this word primarily evokes and why; (2) Ayurvedic dosha balance this word's phonemic pattern supports; (3) recommended season and time of day for chanting. 3-4 sentences.
+
+### NEUROSCIENCE NOTE
+State: (1) specific brainwave shift (alpha/theta/gamma) when this word is chanted; (2) HPA axis and cortisol effect; (3) default mode network modulation; (4) heart rate variability change; (5) cite one peer-reviewed study or research direction. 3-4 sentences.
+
+Use IAST throughout. No bullet points within sections.`;
+
+  try {
+    const txt = await callAI(prompt, 2000);
+    inferenceCount++;
+    document.getElementById('statInf').textContent = inferenceCount;
+    renderInferenceResults(word, txt, matchingAk, matchingDh);
+    if(btn){btn.disabled=false;btn.textContent='⚡ Analyse';}
+    log('ok', `✓ Inference complete: "${word}" — ${inferenceCount} total`);
+  } catch(err) {
+    out.innerHTML = `<div style="color:var(--red-err);padding:14px;font-size:0.84rem;">${esc(err.message)}</div>`;
+    if(btn){btn.disabled=false;btn.textContent='⚡ Analyse';}
+    log('err', err.message);
+  }
+}
+
+function renderInferenceResults(word, raw, matchingAk, matchingDh) {
+  const sections = {
+    'DHĀTU DERIVATION':'dhatu',
+    'PĀṆINIAN PARSE TABLE':'chakra',
+    'CHAKRA & STHĀNA':'chakra',
+    'CROSS-PORTAL LINKS':'crosslinks',
+    'RASA & DOSHA':'rasa',
+    'NEUROSCIENCE NOTE':'neuro'
+  };
+
+  // Parse sections from raw text
+  const parsed = {};
+  const parts = raw.split(/###\s*/);
+  parts.forEach(part => {
+    if(!part.trim()) return;
+    const firstLine = part.split('\n')[0].trim().toUpperCase();
+    const rest = part.split('\n').slice(1).join('\n').trim();
+    for(const key of Object.keys(sections)) {
+      if(firstLine.includes(key.toUpperCase().slice(0,12))) { parsed[key]=rest; break; }
+    }
+  });
+
+  const cardDefs = [
+    {key:'DHĀTU DERIVATION', cls:'dhatu', title:'Dhātu Derivation', icon:'🌿'},
+    {key:'PĀṆINIAN PARSE TABLE', cls:'chakra', title:'Pāṇinian Parse', icon:'📐'},
+    {key:'CHAKRA & STHĀNA', cls:'chakra', title:'Chakra & Sthāna', icon:'⚡'},
+    {key:'CROSS-PORTAL LINKS', cls:'crosslinks', title:'Cross-Portal Links', icon:'🔗'},
+    {key:'RASA & DOSHA', cls:'rasa', title:'Rasa & Dosha', icon:'🎭'},
+    {key:'NEUROSCIENCE NOTE', cls:'neuro', title:'Neuroscience', icon:'🧠'},
+  ];
+
+  // Build local cross-links
+  const localLinks = [];
+  if(matchingAk.length) localLinks.push(`<span class="xlink">Akshara: ${matchingAk.slice(0,2).map(a=>a.i).join(', ')}</span>`);
+  if(matchingDh.length) localLinks.push(`<span class="xlink">Dhātu: ${matchingDh.slice(0,2).map(d=>d.r).join(', ')}</span>`);
+
+  const out = document.getElementById('infResults');
+  out.innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:10px 16px;background:rgba(0,0,0,0.3);border:1px solid var(--border2);border-radius:4px;">
+      <div style="font-family:'Cinzel Decorative',serif;font-size:1.2rem;color:var(--violet3);">${esc(word)}</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.4rem;color:var(--muted);">Pāṇinian Inference · ${new Date().toLocaleTimeString()}</div>
+      ${localLinks.length?`<div style="margin-left:auto;display:flex;gap:4px;flex-wrap:wrap;">${localLinks.join('')}</div>`:''}
+    </div>
+    <div class="inf-results">
+      ${cardDefs.map(def => `
+        <div class="inf-card ${def.cls}">
+          <div class="inf-card-title">${def.icon} ${def.title}</div>
+          <div class="inf-card-body">${parsed[def.key]?renderInfSection(parsed[def.key]):'<em>Section not found in AI output — re-run for complete analysis.</em>'}</div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function renderInfSection(text) {
+  if(!text) return '';
+  // Check if it looks like a table (Term | Value)
+  if(text.includes('|')) {
+    const rows = text.split('\n').filter(l=>l.includes('|')&&l.trim());
+    if(rows.length>=3) {
+      return `<table class="panini-table">
+        ${rows.map((r,i)=>{
+          const cells=r.split('|').map(c=>c.trim()).filter(Boolean);
+          if(cells.length>=2) return `<tr><td>${esc(cells[0])}</td><td>${esc(cells.slice(1).join(' '))}</td></tr>`;
+          return '';
+        }).join('')}
+      </table>`;
+    }
+  }
+  return renderMd(text);
+}
+
+function quickInfer(word) {
+  document.getElementById('infWordInp').value = word;
+  showPane('inference');
+  setTimeout(runInference, 100);
+}
+
+// ═══════════════════════════════════════════════════════
+//  UTILITIES
+// ═══════════════════════════════════════════════════════
+function renderMd(text) {
+  if(!text) return '';
+  return text
+    .replace(/^### (.+)$/gm,'<h3 style="font-family:\'Cinzel\',serif;font-size:0.72rem;color:var(--violet3);margin:14px 0 6px;letter-spacing:0.8px;">$1</h3>')
+    .replace(/^## (.+)$/gm,'<h3 style="color:var(--gold2);font-family:\'Cinzel Decorative\',serif;font-size:0.8rem;margin:16px 0 7px;">$1</h3>')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/`([^`]+)`/g,'<code style="background:rgba(180,104,212,0.1);padding:1px 4px;border-radius:2px;font-family:\'JetBrains Mono\',monospace;font-size:0.82em;">$1</code>')
+    .replace(/^> (.+)$/gm,'<blockquote style="border-left:2px solid var(--violet);padding:6px 12px;margin:8px 0;background:rgba(180,104,212,0.04);font-style:italic;">$1</blockquote>')
+    .split(/\n{2,}/).map(b=>{
+      if(!b.trim()||b.match(/^<(h[1-4]|blockquote)/)) return b;
+      return `<p>${b.replace(/\n/g,'<br/>')}</p>`;
+    }).join('\n');
+}
+
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function log(type, msg) {
+  const t=new Date();
+  const ts=`${String(t.getHours()).padStart(2,'0')}:${String(t.getMinutes()).padStart(2,'0')}:${String(t.getSeconds()).padStart(2,'0')}`;
+  const dot=document.getElementById('logDot');
+  const txt=document.getElementById('logTxt');
+  const time=document.getElementById('logTime');
+  if(dot)dot.className=`log-dot ${type}`;
+  if(txt)txt.textContent=msg;
+  if(time)time.textContent=ts;
+}
+
+function updateStats() {
+  // Count total cross-links
+  let lalTotal=0,rudTotal=0,swTotal=0;
+  DHATUS.forEach(d=>{lalTotal+=(d.lal||[]).length;rudTotal+=(d.rud||[]).length;swTotal+=(d.sw||[]).length;});
+  AKSHARAS.forEach(a=>{lalTotal+=(a.lalita||[]).length;rudTotal+=(a.rudram||[]).length;});
+  document.getElementById('statLalita').textContent=lalTotal;
+  document.getElementById('statRudram').textContent=rudTotal;
+  document.getElementById('statSwara').textContent=swTotal;
+}
+
+// ═══════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════
+(function init(){
+  buildAksharaGrid();
+  updateKeyUI();
+  log('info','Sanskrit Dimension Phase 2 ready · 50 Aksharas · 200 Dhātus · Live Inference Engine');
+})();
+</script>
+</body>
+</html>
