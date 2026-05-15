@@ -1360,5 +1360,505 @@ function updateStats() {
   log('info','Sanskrit Dimension Phase 2 ready · 50 Aksharas · 200 Dhātus · Live Inference Engine');
 })();
 </script>
+   <!-- ═══════════════════════════════════════════════════════════════
+     RESEARCH FORGE — 20-Slot Key Vault (drop-in replacement)
+     Paste this entire block just before your closing </body> tag.
+     Keys are saved to localStorage and shown blurred on reload.
+     ═══════════════════════════════════════════════════════════════ -->
+
+<style>
+/* ── Override: 20-slot key panel ── */
+.forge-keys {
+  width: 300px;
+  flex-shrink: 0;
+  background: rgba(8,10,22,0.95);
+  border-left: 1px solid var(--forge-border);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(197,160,89,0.15) transparent;
+}
+.forge-keys::-webkit-scrollbar { width: 3px; }
+.forge-keys::-webkit-scrollbar-thumb { background: rgba(197,160,89,0.15); border-radius: 2px; }
+
+.fk-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--forge-border);
+  background: rgba(255,255,255,0.02);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.fk-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--forge-gold);
+  margin-bottom: 3px;
+}
+.fk-subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.45rem;
+  color: #444;
+  line-height: 1.6;
+}
+
+.fk-body { padding: 10px 12px; }
+
+/* Each slot row */
+.key-slot-20 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.ks20-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.48rem;
+  color: #333;
+  min-width: 18px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.ks20-input {
+  flex: 1;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  padding: 6px 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.5rem;
+  color: #888;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  min-width: 0;
+}
+.ks20-input:focus { border-color: rgba(197,160,89,0.5); background: rgba(255,255,255,0.05); }
+.ks20-input::placeholder { color: #2a2a2a; font-size: 0.42rem; }
+
+/* Locked / blurred state */
+.ks20-input.ks-locked {
+  color: transparent;
+  text-shadow: 0 0 8px rgba(45,212,160,0.6);
+  border-color: rgba(45,212,160,0.25);
+  background: rgba(5,20,15,0.6);
+  pointer-events: none;
+  user-select: none;
+}
+
+.ks20-btn {
+  width: 22px;
+  height: 22px;
+  background: none;
+  border: 1px solid rgba(255,255,255,0.07);
+  color: #333;
+  font-size: 0.6rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 2px;
+}
+.ks20-btn:hover { border-color: rgba(197,160,89,0.4); color: var(--forge-gold); }
+.ks20-btn.ks-locked { border-color: rgba(45,212,160,0.35); color: #2dd4a0; }
+.ks20-btn.ks-unlock { border-color: rgba(248,113,113,0.3); color: #f87171; font-size: 0.5rem; }
+
+/* Status strip */
+.fk-stats {
+  padding: 10px 14px;
+  border-top: 1px solid var(--forge-border);
+  background: rgba(255,255,255,0.01);
+  position: sticky;
+  bottom: 0;
+}
+.fks-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+.fks-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.48rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #333;
+}
+.fks-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  color: #2dd4a0;
+}
+
+.fk-clear-btn {
+  width: 100%;
+  margin-top: 8px;
+  padding: 7px;
+  background: rgba(248,113,113,0.04);
+  border: 1px solid rgba(248,113,113,0.15);
+  color: #555;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.fk-clear-btn:hover { color: #f87171; border-color: rgba(248,113,113,0.4); }
+
+/* Override status bar provider pills to say "Key Vault" */
+.forge-status-bar .provider-pill.vault-pill {
+  color: #c5a059;
+  border-color: rgba(197,160,89,0.3);
+}
+.forge-status-bar .provider-pill.vault-pill.active { opacity: 1; }
+.forge-status-bar .provider-pill.vault-pill.idle { opacity: 0.4; }
+</style>
+
+<script>
+/* ════════════════════════════════════════════════════════
+   RESEARCH FORGE — 20-Slot Key Engine (localStorage-backed)
+   Replaces the multi-provider key system with a single
+   20-slot vault. Keys persist across page loads.
+   ════════════════════════════════════════════════════════ */
+
+const VAULT_KEY = 'forge_vault_v1';
+const SLOT_COUNT = 20;
+
+/* Internal vault: array of {key, used, errors} */
+let _vault = Array.from({length: SLOT_COUNT}, () => ({key:'', used:0, errors:0}));
+let _vaultRequests = 0;
+let _vaultCurrentSlot = '—';
+
+/* ── Persistence ── */
+function vaultSave() {
+  const data = _vault.map(s => ({key: s.key})); /* save keys only, not runtime counters */
+  try { localStorage.setItem(VAULT_KEY, JSON.stringify(data)); } catch(e) {}
+}
+
+function vaultLoad() {
+  try {
+    const raw = localStorage.getItem(VAULT_KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    data.forEach((item, i) => {
+      if (i < SLOT_COUNT && item.key) _vault[i].key = item.key;
+    });
+  } catch(e) {}
+}
+
+/* ── Active key helpers ── */
+function vaultGetActive() {
+  return _vault
+    .map((s,i) => ({...s, index:i}))
+    .filter(s => s.key && s.errors < 3);
+}
+
+function vaultGetNext() {
+  const active = vaultGetActive();
+  if (!active.length) return null;
+  return active.reduce((a,b) => a.used <= b.used ? a : b);
+}
+
+function vaultMarkError(index) {
+  _vault[index].errors++;
+  vaultUpdateStatusBar();
+}
+
+function vaultMarkUsed(index) {
+  _vault[index].used++;
+  _vault[index].errors = 0;
+  _vaultRequests++;
+  _vaultCurrentSlot = `Slot ${index + 1}`;
+  const el = document.getElementById('fkReqCount');
+  if (el) el.textContent = _vaultRequests;
+  const pEl = document.getElementById('fkCurProvider');
+  if (pEl) pEl.textContent = _vaultCurrentSlot;
+  vaultUpdateStatusBar();
+}
+
+/* ── Override callAI to use vault ── */
+async function callAI(prompt, maxTokens=1200) {
+  const slot = vaultGetNext();
+  if (!slot) throw new Error('No API keys available. Please add keys in the Key Vault panel (right side).');
+
+  const key = slot.key;
+  const index = slot.index;
+
+  /* Detect provider from key prefix and call appropriate endpoint */
+  try {
+    let result;
+
+    if (key.startsWith('gsk_') || key.startsWith('gsk-')) {
+      /* Groq */
+      result = await _callGroqKey(key, prompt, maxTokens);
+    } else if (key.startsWith('AIzaSy') || key.startsWith('AIza')) {
+      /* Gemini */
+      result = await _callGeminiKey(key, prompt, maxTokens);
+    } else if (key.startsWith('sk-or') || key.startsWith('sk-or-v1')) {
+      /* OpenRouter */
+      result = await _callOpenRouterKey(key, prompt, maxTokens);
+    } else if (key.startsWith('sk-ant')) {
+      /* Anthropic — fallback */
+      result = await _callAnthropicKey(key, prompt, maxTokens);
+    } else {
+      /* Unknown — try Groq first, then OpenRouter */
+      try {
+        result = await _callGroqKey(key, prompt, maxTokens);
+      } catch(e2) {
+        result = await _callOpenRouterKey(key, prompt, maxTokens);
+      }
+    }
+
+    vaultMarkUsed(index);
+    return result;
+
+  } catch(err) {
+    if (typeof forgeLog === 'function') forgeLog(`Slot ${index+1} error: ${err.message}`, 'err');
+    vaultMarkError(index);
+    /* Try next key recursively (once) */
+    const next = vaultGetNext();
+    if (next && next.index !== index) {
+      return callAI(prompt, maxTokens);
+    }
+    throw new Error('All available keys failed. ' + err.message);
+  }
+}
+
+async function _callGroqKey(key, prompt, maxTokens) {
+  const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json','Authorization':`Bearer ${key}`},
+    body: JSON.stringify({
+      model: 'llama-3.3-70b-versatile',
+      max_tokens: Math.min(maxTokens, 8000),
+      messages: [{role:'user', content:prompt}]
+    })
+  });
+  if (!r.ok) throw new Error(`Groq HTTP ${r.status}`);
+  const d = await r.json();
+  return d.choices?.[0]?.message?.content || '';
+}
+
+async function _callGeminiKey(key, prompt, maxTokens) {
+  const r = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`,
+    {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        contents: [{parts:[{text:prompt}]}],
+        generationConfig: {maxOutputTokens: Math.min(maxTokens, 8192)}
+      })
+    }
+  );
+  if (!r.ok) throw new Error(`Gemini HTTP ${r.status}`);
+  const d = await r.json();
+  return d.candidates?.[0]?.content?.parts?.[0]?.text || '';
+}
+
+async function _callOpenRouterKey(key, prompt, maxTokens) {
+  const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type':'application/json',
+      'Authorization':`Bearer ${key}`,
+      'HTTP-Referer':'https://culturalmusings.com',
+      'X-Title':'Research Forge'
+    },
+    body: JSON.stringify({
+      model: 'meta-llama/llama-3.3-70b-instruct:free',
+      max_tokens: Math.min(maxTokens, 8000),
+      messages: [{role:'user', content:prompt}]
+    })
+  });
+  if (!r.ok) throw new Error(`OpenRouter HTTP ${r.status}`);
+  const d = await r.json();
+  return d.choices?.[0]?.message?.content || '';
+}
+
+async function _callAnthropicKey(key, prompt, maxTokens) {
+  const r = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type':'application/json',
+      'x-api-key': key,
+      'anthropic-version': '2023-06-01'
+    },
+    body: JSON.stringify({
+      model: 'claude-3-haiku-20240307',
+      max_tokens: Math.min(maxTokens, 4096),
+      messages: [{role:'user', content:prompt}]
+    })
+  });
+  if (!r.ok) throw new Error(`Anthropic HTTP ${r.status}`);
+  const d = await r.json();
+  return d.content?.[0]?.text || '';
+}
+
+/* ════════════════════════════════════════════
+   KEY PANEL UI — builds 20 slots
+   ════════════════════════════════════════════ */
+
+function buildKeyPanel() {
+  const body = document.getElementById('forgeKeyBody');
+  if (!body) return;
+
+  /* Replace header subtitle */
+  const subtitle = document.querySelector('.fk-subtitle');
+  if (subtitle) subtitle.textContent = 'Paste any key (Groq/Gemini/OpenRouter/Anthropic). Auto-detected. Persists on reload.';
+
+  body.innerHTML = Array.from({length: SLOT_COUNT}, (_, i) => {
+    const slot = _vault[i];
+    const isLocked = !!slot.key;
+    const displayVal = isLocked ? (slot.key.slice(0,4) + '••••••••' + slot.key.slice(-3)) : '';
+    return `
+    <div class="key-slot-20" id="kslot-row-${i}">
+      <span class="ks20-num">${String(i+1).padStart(2,'0')}</span>
+      <input
+        type="text"
+        class="ks20-input${isLocked ? ' ks-locked' : ''}"
+        id="kslot-${i}"
+        value="${displayVal}"
+        placeholder="Paste any API key…"
+        autocomplete="off"
+        spellcheck="false"
+        ${isLocked ? 'readonly' : ''}
+        onpaste="vaultHandlePaste(event, ${i})"
+        onkeydown="vaultHandleEnter(event, ${i})"
+      >
+      <button
+        class="ks20-btn${isLocked ? ' ks-locked' : ''}"
+        id="kslot-btn-${i}"
+        title="${isLocked ? 'Click to remove key' : 'Press Enter or paste key'}"
+        onclick="vaultToggleSlot(${i})"
+      >${isLocked ? '✓' : '+'}</button>
+    </div>`;
+  }).join('');
+
+  vaultUpdateStatusBar();
+}
+
+function vaultHandlePaste(e, index) {
+  e.preventDefault();
+  const raw = (e.clipboardData || window.clipboardData).getData('text').trim();
+  if (raw.length >= 8) vaultLockSlot(index, raw);
+}
+
+function vaultHandleEnter(e, index) {
+  if (e.key === 'Enter') {
+    const inp = document.getElementById('kslot-' + index);
+    if (inp && inp.value.trim().length >= 8) vaultLockSlot(index, inp.value.trim());
+  }
+}
+
+function vaultToggleSlot(index) {
+  const slot = _vault[index];
+  if (slot.key) {
+    /* Unlock / remove */
+    if (!confirm(`Remove key from Slot ${index+1}?`)) return;
+    slot.key = '';
+    slot.used = 0;
+    slot.errors = 0;
+    const inp = document.getElementById('kslot-' + index);
+    const btn = document.getElementById('kslot-btn-' + index);
+    if (inp) { inp.value=''; inp.classList.remove('ks-locked'); inp.removeAttribute('readonly'); }
+    if (btn) { btn.textContent='+'; btn.classList.remove('ks-locked'); btn.title='Press Enter or paste key'; }
+    vaultSave();
+    vaultUpdateStatusBar();
+    if (typeof forgeLog === 'function') forgeLog(`Slot ${index+1} key removed`, 'warn');
+  }
+}
+
+function vaultLockSlot(index, key) {
+  _vault[index].key = key;
+  _vault[index].errors = 0;
+
+  const inp = document.getElementById('kslot-' + index);
+  const btn = document.getElementById('kslot-btn-' + index);
+  if (inp) {
+    inp.value = key.slice(0,4) + '••••••••' + key.slice(-3);
+    inp.classList.add('ks-locked');
+    inp.setAttribute('readonly','');
+  }
+  if (btn) {
+    btn.textContent = '✓';
+    btn.classList.add('ks-locked');
+    btn.title = 'Click to remove key';
+  }
+
+  vaultSave();
+  vaultUpdateStatusBar();
+  if (typeof forgeLog === 'function') forgeLog(`Slot ${index+1} locked ✓`, 'ok');
+}
+
+/* Rebuild status bar with single "Key Vault" pill */
+function vaultUpdateStatusBar() {
+  const bar = document.getElementById('forgeStatusBar');
+  if (!bar) return;
+
+  /* Remove old provider pills */
+  const oldPills = bar.querySelectorAll('.provider-pill');
+  oldPills.forEach(p => p.remove());
+
+  const active = vaultGetActive().length;
+  const total = SLOT_COUNT;
+
+  const pill = document.createElement('span');
+  pill.className = `provider-pill vault-pill ${active > 0 ? 'active' : 'idle'}`;
+  pill.innerHTML = `<span class="pill-dot ${active > 0 ? 'ok' : 'empty'}"></span>Key Vault ${active}/${total}`;
+
+  const totalEl = bar.querySelector('.fsb-total');
+  if (totalEl) bar.insertBefore(pill, totalEl);
+
+  if (totalEl) totalEl.textContent = `${active} key${active!==1?'s':''} active`;
+
+  const countEl = document.getElementById('fkActiveCount');
+  if (countEl) countEl.textContent = active;
+
+  /* Enable/disable generate button */
+  if (typeof updateGenerateBtn === 'function') updateGenerateBtn();
+  else {
+    const btn = document.getElementById('generateBtn');
+    if (btn) btn.disabled = active === 0;
+  }
+}
+
+/* Override the original getActiveKeys / updateGenerateBtn to use vault */
+function getActiveKeys(provider) {
+  /* Called by original token budget code — return vault actives as a compatible array */
+  return vaultGetActive();
+}
+
+/* Override clearAllKeys */
+function clearAllKeys() {
+  if (!confirm('Clear all 20 API keys from vault?')) return;
+  _vault.forEach((s,i) => {
+    s.key=''; s.used=0; s.errors=0;
+    const inp = document.getElementById('kslot-' + i);
+    const btn = document.getElementById('kslot-btn-' + i);
+    if (inp) { inp.value=''; inp.classList.remove('ks-locked'); inp.removeAttribute('readonly'); }
+    if (btn) { btn.textContent='+'; btn.classList.remove('ks-locked'); }
+  });
+  vaultSave();
+  vaultUpdateStatusBar();
+  if (typeof forgeLog === 'function') forgeLog('All vault keys cleared', 'warn');
+}
+
+/* ════════════════════════════════════════════
+   INIT — runs after DOMContentLoaded
+   ════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  vaultLoad();      /* restore persisted keys first */
+  buildKeyPanel();  /* render 20 slots (already-locked ones show blurred) */
+  vaultUpdateStatusBar();
+});
+</script>
+<!-- ── END api-key-manager-snippet.html ── -->
 </body>
 </html>
